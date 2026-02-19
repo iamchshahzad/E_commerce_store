@@ -4,18 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}E-Commerce Store{% endblock %}</title>
+    <meta name="description" content="E-Shop — Premium online store with the best products at amazing prices.">
+    <title>{% block title %}E-Shop — Premium Store{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 <body>
 
     <nav class="navbar">
-        <a href="{% url 'product_list' %}" class="navbar-brand">E-Shop</a>
-        <ul class="navbar-nav">
-            <li><a href="{% url 'product_list' %}" class="nav-link">Home</a></li>
-            <li><a href="{% url 'cart_detail' %}" class="nav-link">Cart</a></li>
-            <li><a href="{% url 'admin:login' %}" class="nav-link">Login</a></li>
+        <a href="{% url 'product_list' %}" class="navbar-brand">⚡ E-Shop</a>
+
+        <!-- Hamburger button (mobile) -->
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul class="navbar-nav" id="navbar-nav">
+            <li><a href="{% url 'product_list' %}" class="nav-link">🏠 Home</a></li>
+            <li><a href="{% url 'cart_detail' %}" class="nav-link">🛒 Cart</a></li>
+            <li><a href="{% url 'admin:index' %}" class="nav-link">⚙️ Admin</a></li>
         </ul>
     </nav>
 
@@ -25,8 +36,27 @@
     </div>
 
     <footer class="footer">
-        <p>&copy; 2026 E-Commerce Store. All rights reserved.</p>
+        <p>© 2026 <strong>E-Shop</strong>. Crafted with ❤️ — All rights reserved.</p>
     </footer>
+
+    <script>
+        // Hamburger toggle
+        const hamburger = document.getElementById('hamburger');
+        const nav = document.getElementById('navbar-nav');
+        hamburger.addEventListener('click', () => {
+            const isOpen = nav.classList.toggle('open');
+            hamburger.classList.toggle('open', isOpen);
+            hamburger.setAttribute('aria-expanded', isOpen);
+        });
+        // Close menu on link click
+        nav.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                nav.classList.remove('open');
+                hamburger.classList.remove('open');
+                hamburger.setAttribute('aria-expanded', false);
+            });
+        });
+    </script>
 
 </body>
 </html>

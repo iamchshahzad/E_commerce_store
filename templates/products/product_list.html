@@ -1,19 +1,23 @@
 {% extends 'base.html' %}
 
-{% block title %}Products - E-Shop{% endblock %}
+{% block title %}Products — E-Shop{% endblock %}
 
 {% block content %}
-<h1 class="text-center mb-4">Our Products</h1>
+<div class="page-header">
+    <h1>Our Products</h1>
+    <p>Discover our curated collection of premium items</p>
+</div>
 
 <div class="product-grid">
     {% for product in products %}
     <div class="product-card">
         <a href="{% url 'product_detail' product.pk %}">
             <div class="product-image">
+                <span class="product-badge">{{ product.category.name }}</span>
                 {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
                 {% else %}
-                <span>{{ product.name|slice:":1" }}</span>
+                <div class="img-placeholder">{{ product.name|slice:":1" }}</div>
                 {% endif %}
             </div>
         </a>
@@ -21,19 +25,23 @@
             <h3 class="product-title">
                 <a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a>
             </h3>
-            <p class="detail-meta">Category: {{ product.category.name }}</p>
             <p class="product-price">${{ product.price }}</p>
             <p class="product-description">{{ product.description|truncatewords:15 }}</p>
-            <form method="post" action="{% url 'add_to_cart' product.pk %}">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{% url 'cart_detail' %}">
-                <button type="submit" class="btn btn-block" style="margin-bottom: 10px;">Add to Cart</button>
-            </form>
-            <a href="{% url 'product_detail' product.pk %}" class="btn btn-block">View Details</a>
+            <div class="product-actions">
+                <form method="post" action="{% url 'add_to_cart' product.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'cart_detail' %}">
+                    <button type="submit" class="btn btn-block">🛒 Add to Cart</button>
+                </form>
+                <a href="{% url 'product_detail' product.pk %}" class="btn btn-secondary btn-block">View Details</a>
+            </div>
         </div>
     </div>
     {% empty %}
-    <p>No products available yet.</p>
+    <div class="empty-state">
+        <div class="empty-state-icon">📦</div>
+        <p>No products available yet.</p>
+    </div>
     {% endfor %}
 </div>
 {% endblock %}
