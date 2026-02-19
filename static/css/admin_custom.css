@@ -32,6 +32,10 @@
     --border-color: rgba(109, 40, 217, 0.15);
     --border-subtle: rgba(0, 0, 0, 0.08);
 
+    /* Layout */
+    --navbar-height: 70px;
+    --page-width: 1250px;
+
     /* Semantic */
     --success-bg: rgba(16, 185, 129, 0.1);
     --success-text: #059669;
@@ -221,7 +225,9 @@ select:focus {
 input[type=submit],
 input[type=button],
 .submit-row input,
-a.button {
+a.button,
+.object-tools a,
+.addlink {
     background: var(--accent-gradient) !important;
     border: none !important;
     color: white !important;
@@ -296,29 +302,352 @@ input[type=submit]:hover {
     color: var(--accent-primary) !important;
 }
 
-/* ==============================================
-   THEME TOGGLE BUTTON (Simplified for Admin)
+/* Actions & Paginator */
+.actions,
+.paginator {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-secondary) !important;
+    padding: 10px !important;
+    border-radius: 8px !important;
+    margin-bottom: 20px !important;
+}
+
+.paginator a:link,
+.paginator a:visited {
+    background: var(--bg-secondary) !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+    color: var(--text-primary) !important;
+}
+
+.paginator span.this-page {
+    background: var(--accent-gradient) !important;
+    color: white !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+    font-weight: bold !important;
+}
+
+.paginator a.showall {
+    background: transparent !important;
+    color: var(--accent-primary) !important;
+    padding: 0 !important;
+    margin-left: 10px !important;
+}
+
+/* =============================================
+   NAVBAR (From Main Site)
    ============================================= */
-.admin-theme-toggle {
-    display: inline-flex;
+.navbar {
+    background: var(--bg-header) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color) !important;
+    padding: 0 30px !important;
+    height: var(--navbar-height);
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 50%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar-brand {
+    font-size: 1.6rem !important;
+    font-weight: 800 !important;
+    background: var(--accent-gradient) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    letter-spacing: -0.5px !important;
+    text-decoration: none !important;
+}
+
+.navbar-nav {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+.nav-link {
+    color: var(--text-secondary) !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    border: 1px solid transparent !important;
+}
+
+.nav-link:hover {
+    color: var(--text-primary) !important;
+    background: rgba(124, 58, 237, 0.1) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Hamburger */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
     cursor: pointer;
-    margin-left: 15px;
-    color: var(--text-primary);
+    padding: 8px;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+}
+
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .navbar-nav {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: var(--bg-card);
+        flex-direction: column;
+        padding: 20px !important;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .navbar-nav.open {
+        display: flex;
+    }
+}
+
+.hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--text-primary);
+    border-radius: 2px;
     transition: all 0.3s ease;
 }
 
-.admin-theme-toggle:hover {
-    background: var(--bg-card-hover);
-    color: var(--accent-primary);
+.hamburger.open span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
 }
 
-.theme-icon {
-    font-size: 1.2rem;
+.hamburger.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* ==============================================
+   THEME TOGGLE BUTTON (Full Version)
+   ============================================= */
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 50px !important;
+    padding: 6px 12px !important;
+    cursor: pointer;
+    color: var(--text-secondary) !important;
+    font-size: 1rem !important;
+    flex-shrink: 0;
+    margin-left: 15px;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.3s ease !important;
+}
+
+.theme-toggle:hover {
+    border-color: var(--accent-primary) !important;
+    box-shadow: 0 0 0 3px var(--accent-glow) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Pill track */
+.theme-toggle__track {
+    width: 36px;
+    height: 20px;
+    background: linear-gradient(135deg, #7c3aed, #ec4899);
+    border-radius: 50px;
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    transition: background 0.3s ease;
+}
+
+/* Sliding thumb */
+.theme-toggle__thumb {
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Icons */
+.theme-toggle__icon {
+    font-size: 1.05rem;
+    line-height: 1;
+    transition: opacity 0.2s ease, transform 0.3s ease;
+}
+
+.theme-toggle__icon--sun {
+    opacity: 1;
+}
+
+.theme-toggle__icon--moon {
+    opacity: 0.4;
+}
+
+.theme-toggle__label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    min-width: 38px;
+    text-align: left;
+}
+
+/* Light mode logic handled via JS classes usually, 
+   but here we rely on data-theme attribute on root 
+   to styling specific override if needed. 
+   Actually base.html JS toggles .is-light class on button. 
+*/
+.theme-toggle.is-light .theme-toggle__thumb {
+    transform: translateX(16px);
+}
+
+.theme-toggle.is-light .theme-toggle__track {
+    background: linear-gradient(135deg, #6d28d9, #db2777);
+}
+
+.theme-toggle.is-light .theme-toggle__icon--sun {
+    opacity: 0.4;
+}
+
+
+
+/* =============================================
+   GLOBAL PAGE WIDTH (Match Storefront)
+   ============================================= */
+#content {
+    max-width: var(--page-width);
+    margin: 0 auto;
+    width: 100%;
+    padding: 20px 40px;
+    /* Tweak padding as needed */
+}
+
+/* =============================================
+   DASHBOARD UX IMPROVEMENTS
+   ============================================= */
+.dashboard #content {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(290px, 1fr);
+    gap: 22px;
+    padding-top: 16px;
+}
+
+.dashboard #content-main,
+.dashboard #content-related {
+    float: none !important;
+    width: auto !important;
+}
+
+.dashboard #content-related {
+    position: sticky;
+    top: calc(var(--navbar-height) + 18px);
+    align-self: start;
+}
+
+.dashboard .module {
+    overflow: hidden;
+}
+
+.dashboard .module table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dashboard .module tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.dashboard .module tbody tr:hover {
+    background: var(--bg-card-hover);
+}
+
+.dashboard .module td,
+.dashboard .module th {
+    padding: 12px 10px !important;
+    vertical-align: middle;
+}
+
+.dashboard .module td a {
+    font-weight: 600;
+}
+
+#recent-actions-module .actionlist li {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 10px 12px;
+}
+
+#recent-actions-module .actionlist li:hover {
+    border-color: var(--border-color);
+    box-shadow: 0 6px 18px rgba(109, 40, 217, 0.12);
+}
+
+@media (max-width: 1100px) {
+    .dashboard #content {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard #content-related {
+        position: static;
+    }
+}
+
+@media (max-width: 640px) {
+    .navbar {
+        gap: 10px;
+    }
+
+    .navbar-brand {
+        font-size: 1.3rem !important;
+    }
+
+    .theme-toggle {
+        margin-left: 0;
+        padding: 6px 10px !important;
+    }
+
+    .theme-toggle__label {
+        min-width: 0;
+        font-size: 0.75rem;
+    }
+
+    .dashboard .module td,
+    .dashboard .module th {
+        padding: 10px 8px !important;
+    }
+
+    #recent-actions-module .actionlist li {
+        padding: 8px 10px;
+    }
 }

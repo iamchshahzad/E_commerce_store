@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Products — E-Shop{% endblock %}
+{% block title %}Products - E-Shop{% endblock %}
 
 {% block content %}
 <div class="page-header">
@@ -8,38 +8,40 @@
     <p>Discover our curated collection of premium items</p>
 </div>
 
-<div class="product-grid">
+<div class="products-row-list">
     {% for product in products %}
-    <div class="product-card">
-        <a href="{% url 'product_detail' product.pk %}">
-            <div class="product-image">
-                <span class="product-badge">{{ product.category.name }}</span>
-                {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
-                {% else %}
-                <div class="img-placeholder">{{ product.name|slice:":1" }}</div>
-                {% endif %}
-            </div>
+    <article class="product-row">
+        <a href="{% url 'product_detail' product.pk %}" class="product-row-media">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+            {% else %}
+            <div class="product-row-placeholder">{{ product.name|slice:":1" }}</div>
+            {% endif %}
         </a>
-        <div class="product-details">
-            <h3 class="product-title">
+
+        <div class="product-row-main">
+            <p class="product-row-category">{{ product.category.name }}</p>
+            <h3 class="product-row-title">
                 <a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a>
             </h3>
-            <p class="product-price">${{ product.price }}</p>
-            <p class="product-description">{{ product.description|truncatewords:15 }}</p>
-            <div class="product-actions">
+            <p class="product-row-description">{{ product.description|truncatewords:20 }}</p>
+        </div>
+
+        <div class="product-row-right">
+            <p class="product-row-price">${{ product.price }}</p>
+            <div class="product-row-actions">
                 <form method="post" action="{% url 'add_to_cart' product.pk %}">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{% url 'cart_detail' %}">
-                    <button type="submit" class="btn btn-block">🛒 Add to Cart</button>
+                    <button type="submit" class="btn">Add to Cart</button>
                 </form>
-                <a href="{% url 'product_detail' product.pk %}" class="btn btn-secondary btn-block">View Details</a>
+                <a href="{% url 'product_detail' product.pk %}" class="btn btn-secondary">View Details</a>
             </div>
         </div>
-    </div>
+    </article>
     {% empty %}
     <div class="empty-state">
-        <div class="empty-state-icon">📦</div>
+        <div class="empty-state-icon">&#128230;</div>
         <p>No products available yet.</p>
     </div>
     {% endfor %}

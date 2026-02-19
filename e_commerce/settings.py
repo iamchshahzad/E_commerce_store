@@ -113,7 +113,7 @@ JAZZMIN_UI_TWEAKS = {
 # Applications
 # -------------------------------------------------------
 INSTALLED_APPS = [
-    'jazzmin',              # must be FIRST - before django.contrib.admin
+    # 'jazzmin',              # must be FIRST - before django.contrib.admin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

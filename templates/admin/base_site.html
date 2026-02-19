@@ -3,19 +3,13 @@
 
 {% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | E-Shop Admin{% endblock %}
 
-{% block branding %}
-<h1 id="site-name">
-    <a href="{% url 'admin:index' %}">E-Shop Admin</a>
-</h1>
-{% endblock %}
-
 {% block extrastyle %}
 {{ block.super }}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{% static 'css/admin_custom.css' %}">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Init Theme -->
+<!-- Init Theme from localStorage -->
 <script>
     (function () {
         var t = localStorage.getItem('eshop-theme') || 'light';
@@ -24,53 +18,83 @@
 </script>
 {% endblock %}
 
-{% block usertools %}
-<div id="user-tools">
-    {% block welcome-msg %}
-    {% if user.is_active and user.is_staff %}
-    {% url 'django-admindocs-docroot' as docsroot %}
-    {% if docsroot %}
-    <a href="{{ docsroot }}">Documentation</a> /
-    {% endif %}
-    {% if user.has_usable_password %}
-    <a href="{% url 'admin:password_change' %}">Change password</a> /
-    {% endif %}
-    <a href="{% url 'admin:logout' %}">Log out</a>
-    {% endif %}
-    {% endblock %}
+{% block header %}
+<!-- Main Navbar (Replacing Admin Header) -->
+<nav class="navbar" id="admin-navbar">
+    <a href="{% url 'admin:index' %}" class="navbar-brand">&#9881; E-Shop Admin</a>
+
+    <!-- Hamburger button (mobile) -->
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <ul class="navbar-nav" id="navbar-nav">
+        <li><a href="/" class="nav-link">&#127968; View Site</a></li>
+        <!-- Staff Links -->
+        {% if user.is_active and user.is_staff %}
+        {% if user.has_usable_password %}
+        <li><a href="{% url 'admin:password_change' %}" class="nav-link">Unknown Password?</a></li>
+        {% endif %}
+        <li><a href="{% url 'admin:logout' %}" class="nav-link">Log out</a></li>
+        {% endif %}
+    </ul>
 
     <!-- Theme Toggle -->
-    <button class="admin-theme-toggle" id="admin-theme-toggle" title="Toggle Theme" type="button">
-        <span class="theme-icon" id="theme-icon-display">&#9728;</span> <!-- default sun -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Switch theme" title="Toggle theme" type="button">
+        <span class="theme-toggle__track">
+            <span class="theme-toggle__thumb"></span>
+        </span>
+        <span class="theme-toggle__icon theme-toggle__icon--sun">&#9728;</span>
+        <span class="theme-toggle__icon theme-toggle__icon--moon">&#9790;</span>
+        <span class="theme-toggle__label" id="theme-toggle-label">Light</span>
     </button>
-</div>
-{% endblock %}
-
-{% block footer %}
-<div id="footer">
-    <p>E-Shop Administration &copy; 2026 &mdash; Built with Django</p>
-</div>
+</nav>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const btn = document.getElementById('admin-theme-toggle');
-        const icon = document.getElementById('theme-icon-display');
-        const root = document.documentElement;
+    // ---- Hamburger menu logic ----
+    const hamburger = document.getElementById('hamburger');
+    const nav = document.getElementById('navbar-nav');
+    if (hamburger && nav) {
+        hamburger.addEventListener('click', () => {
+            const isOpen = nav.classList.toggle('open');
+            hamburger.classList.toggle('open', isOpen);
+            hamburger.setAttribute('aria-expanded', String(isOpen));
+        });
+    }
 
-        function updateIcon() {
-            const isDark = root.getAttribute('data-theme') === 'dark';
-            icon.innerHTML = isDark ? '&#9790;' : '&#9728;'; // Moon or Sun
+    // ---- Theme Toggle logic ----
+    const root = document.documentElement;
+    const themeBtn = document.getElementById('theme-toggle');
+    const themeLabel = document.getElementById('theme-toggle-label');
+    const STORAGE_KEY = 'eshop-theme';
+
+    function applyTheme(theme) {
+        root.setAttribute('data-theme', theme);
+        localStorage.setItem(STORAGE_KEY, theme);
+
+        if (themeBtn) {
+            themeBtn.classList.toggle('is-light', theme === 'light');
+            themeBtn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
         }
+        if (themeLabel) {
+            themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
+        }
+    }
 
-        updateIcon();
+    // Init state
+    const currentTheme = localStorage.getItem(STORAGE_KEY) || 'light';
+    applyTheme(currentTheme);
 
-        btn.addEventListener('click', function () {
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
             const current = root.getAttribute('data-theme');
             const next = current === 'dark' ? 'light' : 'dark';
-            root.setAttribute('data-theme', next);
-            localStorage.setItem('eshop-theme', next);
-            updateIcon();
+            applyTheme(next);
         });
-    });
+    }
 </script>
 {% endblock %}
+
+{% block nav-global %}{% endblock %}
