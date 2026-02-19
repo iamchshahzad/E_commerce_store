@@ -1,5 +1,6 @@
 ﻿from django.contrib import admin
 from django.utils.html import format_html
+from django.contrib import messages
 from .models import Category, Product
 
 
@@ -26,7 +27,9 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
 
-    # List view configuration
+    # ----------------------------------------------------------------
+    # List view
+    # ----------------------------------------------------------------
     list_display = (
         "image_thumbnail",
         "name",
@@ -35,14 +38,20 @@ class ProductAdmin(admin.ModelAdmin):
         "stock",
         "stock_status",
     )
-    list_display_links = ("image_thumbnail", "name")
-    list_editable = ("price", "stock")
-    list_filter = ("category",)
-    search_fields = ("name", "description", "category__name")
-    list_per_page = 20
-    ordering = ("name",)
+    # Keep list_display_links only on image+name; price & stock are editable
+    list_display_links  = ("image_thumbnail", "name")
+    list_editable       = ("price", "stock")
+    list_filter         = ("category",)
+    search_fields       = ("name", "description", "category__name")
+    list_per_page       = 20
+    ordering            = ("name",)
 
-    # Edit form configuration
+    # Explicit actions list — ensures Delete is always present & works
+    actions = ["delete_selected_products"]
+
+    # ----------------------------------------------------------------
+    # Edit form
+    # ----------------------------------------------------------------
     readonly_fields = ("image_preview",)
 
     fieldsets = (
@@ -65,12 +74,31 @@ class ProductAdmin(admin.ModelAdmin):
             {
                 "fields": ("image", "image_preview"),
                 "classes": ("wide",),
-                "description": "Upload a product photo. Recommended: square image, min 600x600px.",
+                "description": (
+                    "Upload a product photo. "
+                    "Recommended: square image, min 600x600px."
+                ),
             },
         ),
     )
 
-    # Custom columns
+    # ----------------------------------------------------------------
+    # Custom actions
+    # ----------------------------------------------------------------
+
+    @admin.action(description="Delete selected products")
+    def delete_selected_products(self, request, queryset):
+        count = queryset.count()
+        queryset.delete()
+        self.message_user(
+            request,
+            f"Successfully deleted {count} product(s).",
+            messages.SUCCESS,
+        )
+
+    # ----------------------------------------------------------------
+    # Custom display columns
+    # ----------------------------------------------------------------
 
     @admin.display(description="Photo")
     def image_thumbnail(self, obj):
@@ -95,9 +123,9 @@ class ProductAdmin(admin.ModelAdmin):
         if obj.stock == 0:
             label, color, bg = "Out of Stock", "#ef4444", "#2d1010"
         elif obj.stock <= 5:
-            label, color, bg = "Low Stock", "#f59e0b", "#2d2010"
+            label, color, bg = "Low Stock",    "#f59e0b", "#2d2010"
         else:
-            label, color, bg = "In Stock", "#10b981", "#0d2d1e"
+            label, color, bg = "In Stock",     "#10b981", "#0d2d1e"
         return format_html(
             '<span style="padding:4px 10px;border-radius:20px;'
             'font-size:0.75rem;font-weight:700;'

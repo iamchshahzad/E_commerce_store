@@ -68,12 +68,12 @@ JAZZMIN_SETTINGS = {
     "use_google_fonts_cdn": True,
     "show_ui_builder": False,
 
-    # Use collapsible sections (more reliable than horizontal_tabs)
-    "changeform_format": "collapsible",
+    # Use single layout - all sections always visible, no JS required
+    "changeform_format": "single",
     "changeform_format_overrides": {
-        "products.product": "collapsible",
-        "auth.user":        "collapsible",
-        "auth.group":       "collapsible",
+        "products.product": "single",
+        "auth.user":        "single",
+        "auth.group":       "single",
     },
 }
 
