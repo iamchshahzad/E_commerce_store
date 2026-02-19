@@ -1,4 +1,4 @@
-﻿{% extends "admin/base.html" %}
+{% extends "admin/base.html" %}
 {% load static %}
 
 {% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | E-Shop Admin{% endblock %}
@@ -7,19 +7,20 @@
 {{ block.super }}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="{% static 'css/admin_custom.css' %}">
+<link rel="stylesheet" href="{% static 'css/admin_custom.css' %}?v=11">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Init Theme from localStorage -->
 <script>
     (function () {
-        var t = localStorage.getItem('eshop-theme') || 'light';
-        document.documentElement.setAttribute('data-theme', t);
+        var saved = localStorage.getItem('eshop-theme');
+        var theme = saved === 'dark' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
     })();
 </script>
 {% endblock %}
 
 {% block header %}
-<!-- Main Navbar (Replacing Admin Header) -->
+<!-- Main Navbar (Exact clone of Home Page structure) -->
 <nav class="navbar" id="admin-navbar">
     <a href="{% url 'admin:index' %}" class="navbar-brand">&#9881; E-Shop Admin</a>
 
@@ -32,27 +33,32 @@
 
     <ul class="navbar-nav" id="navbar-nav">
         <li><a href="/" class="nav-link">&#127968; View Site</a></li>
-        <!-- Staff Links -->
         {% if user.is_active and user.is_staff %}
         {% if user.has_usable_password %}
-        <li><a href="{% url 'admin:password_change' %}" class="nav-link">Unknown Password?</a></li>
+        <li><a href="{% url 'admin:password_change' %}" class="nav-link">Change Password</a></li>
         {% endif %}
         <li><a href="{% url 'admin:logout' %}" class="nav-link">Log out</a></li>
         {% endif %}
     </ul>
 
     <!-- Theme Toggle -->
-    <button class="theme-toggle" id="theme-toggle" aria-label="Switch theme" title="Toggle theme" type="button">
-        <span class="theme-toggle__track">
-            <span class="theme-toggle__thumb"></span>
+    <button class="admin-theme-toggle" id="admin-theme-toggle" aria-label="Switch theme" title="Toggle theme"
+        type="button">
+        <span class="admin-theme-toggle__track">
+            <span class="admin-theme-toggle__thumb"></span>
         </span>
-        <span class="theme-toggle__icon theme-toggle__icon--sun">&#9728;</span>
-        <span class="theme-toggle__icon theme-toggle__icon--moon">&#9790;</span>
-        <span class="theme-toggle__label" id="theme-toggle-label">Light</span>
+        <span class="admin-theme-toggle__icon admin-theme-toggle__icon--sun">&#9728;</span>
+        <span class="admin-theme-toggle__icon admin-theme-toggle__icon--moon">&#9790;</span>
+        <span class="admin-theme-toggle__label" id="admin-theme-toggle-label">Light</span>
     </button>
 </nav>
 
 <script>
+    if (window.__ESHOP_ADMIN_THEME_INIT__) {
+        // Guard against duplicate script execution on admin templates.
+    } else {
+        window.__ESHOP_ADMIN_THEME_INIT__ = true;
+
     // ---- Hamburger menu logic ----
     const hamburger = document.getElementById('hamburger');
     const nav = document.getElementById('navbar-nav');
@@ -66,35 +72,80 @@
 
     // ---- Theme Toggle logic ----
     const root = document.documentElement;
-    const themeBtn = document.getElementById('theme-toggle');
-    const themeLabel = document.getElementById('theme-toggle-label');
+    const themeBtn = document.getElementById('admin-theme-toggle');
+    const themeLabel = document.getElementById('admin-theme-toggle-label');
     const STORAGE_KEY = 'eshop-theme';
 
+    function normalizeTheme(value) {
+        return value === 'dark' ? 'dark' : 'light';
+    }
+
     function applyTheme(theme) {
-        root.setAttribute('data-theme', theme);
-        localStorage.setItem(STORAGE_KEY, theme);
+        const normalizedTheme = normalizeTheme(theme);
+        root.setAttribute('data-theme', normalizedTheme);
+        localStorage.setItem(STORAGE_KEY, normalizedTheme);
 
         if (themeBtn) {
-            themeBtn.classList.toggle('is-light', theme === 'light');
-            themeBtn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+            themeBtn.classList.toggle('is-light', normalizedTheme === 'light');
+            themeBtn.setAttribute('aria-label', normalizedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
         }
         if (themeLabel) {
-            themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
+            themeLabel.textContent = normalizedTheme === 'dark' ? 'Dark' : 'Light';
         }
     }
 
     // Init state
-    const currentTheme = localStorage.getItem(STORAGE_KEY) || 'light';
+    const currentTheme = normalizeTheme(localStorage.getItem(STORAGE_KEY));
     applyTheme(currentTheme);
 
     if (themeBtn) {
-        themeBtn.addEventListener('click', () => {
-            const current = root.getAttribute('data-theme');
+        themeBtn.onclick = () => {
+            const current = normalizeTheme(root.getAttribute('data-theme'));
             const next = current === 'dark' ? 'light' : 'dark';
             applyTheme(next);
-        });
+        };
+    }
     }
 </script>
 {% endblock %}
 
 {% block nav-global %}{% endblock %}
+
+{% block footer %}
+{{ block.super }}
+<form id="clear-recent-actions-form" method="post" action="{% url 'admin_clear_recent_actions' %}" class="recent-actions-clear-form">
+    {% csrf_token %}
+    <button type="submit" class="recent-actions-clear-btn" title="Clear your recent activity">Clear Activity</button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const recentModule = document.getElementById('recent-actions-module');
+        const clearForm = document.getElementById('clear-recent-actions-form');
+        if (!clearForm) return;
+
+        if (!recentModule) {
+            clearForm.remove();
+            return;
+        }
+
+        const header = recentModule.querySelector('h2');
+        const toolbar = document.createElement('div');
+        toolbar.className = 'recent-actions-toolbar';
+        toolbar.appendChild(clearForm);
+
+        if (header) {
+            header.insertAdjacentElement('afterend', toolbar);
+        } else {
+            recentModule.prepend(toolbar);
+        }
+
+        clearForm.addEventListener('submit', function (event) {
+            const ok = window.confirm('Clear all items from your recent activity?');
+            if (!ok) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+{% endblock %}

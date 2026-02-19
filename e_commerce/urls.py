@@ -18,9 +18,11 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include, path
+from users.admin import clear_recent_actions
 
 
 urlpatterns = [
+    path('admin/clear-recent-actions/', clear_recent_actions, name='admin_clear_recent_actions'),
     path('admin/', admin.site.urls),
     path('cart/', include('cart.urls')),
     path('', include('products.urls')),

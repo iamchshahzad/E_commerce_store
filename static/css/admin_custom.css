@@ -34,7 +34,7 @@
 
     /* Layout */
     --navbar-height: 70px;
-    --page-width: 1250px;
+    --page-width: 100%;
 
     /* Semantic */
     --success-bg: rgba(16, 185, 129, 0.1);
@@ -115,6 +115,7 @@ body,
 /* ---- Layout Backgrounds ---- */
 body {
     margin: 0;
+    overflow-x: hidden;
 }
 
 #container {
@@ -252,6 +253,26 @@ input[type=submit]:hover {
     padding: 8px 16px !important;
 }
 
+/* Keep object tools (e.g., Add product) aligned and non-clipping */
+.object-tools {
+    float: none !important;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 14px !important;
+    padding: 0 !important;
+}
+
+.object-tools li {
+    float: none !important;
+    margin: 0 !important;
+}
+
+.object-tools a {
+    white-space: nowrap;
+}
+
 /* Tables */
 #changelist table {
     background: var(--bg-card) !important;
@@ -308,9 +329,48 @@ input[type=submit]:hover {
     background: var(--bg-card) !important;
     border: 1px solid var(--border-color) !important;
     color: var(--text-secondary) !important;
-    padding: 10px !important;
+    padding: 14px 12px !important;
+    min-height: 54px;
     border-radius: 8px !important;
     margin-bottom: 20px !important;
+}
+
+/* Changelist actions row: make label, dropdown and Run button balanced */
+.actions {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.actions label {
+    margin: 0 !important;
+    font-weight: 600;
+    color: var(--text-secondary) !important;
+}
+
+.actions select {
+    min-width: 240px;
+    max-width: 280px;
+    height: 46px;
+    padding: 0 12px;
+    border-radius: 10px;
+    color: var(--text-primary) !important;
+    font-weight: 600;
+}
+
+.actions .button,
+.actions button,
+.actions input[type=submit] {
+    min-width: 86px;
+    height: 42px;
+    padding: 0 16px !important;
+}
+
+.actions .action-counter,
+.actions .all,
+.actions .question {
+    margin-left: 2px;
 }
 
 .paginator a:link,
@@ -449,7 +509,7 @@ input[type=submit]:hover {
 /* ==============================================
    THEME TOGGLE BUTTON (Full Version)
    ============================================= */
-.theme-toggle {
+.admin-theme-toggle {
     display: flex;
     align-items: center;
     gap: 7px;
@@ -467,14 +527,14 @@ input[type=submit]:hover {
     transition: all 0.3s ease !important;
 }
 
-.theme-toggle:hover {
+.admin-theme-toggle:hover {
     border-color: var(--accent-primary) !important;
     box-shadow: 0 0 0 3px var(--accent-glow) !important;
     color: var(--text-primary) !important;
 }
 
 /* Pill track */
-.theme-toggle__track {
+.admin-theme-toggle__track {
     width: 36px;
     height: 20px;
     background: linear-gradient(135deg, #7c3aed, #ec4899);
@@ -486,7 +546,7 @@ input[type=submit]:hover {
 }
 
 /* Sliding thumb */
-.theme-toggle__thumb {
+.admin-theme-toggle__thumb {
     width: 14px;
     height: 14px;
     background: white;
@@ -499,21 +559,21 @@ input[type=submit]:hover {
 }
 
 /* Icons */
-.theme-toggle__icon {
+.admin-theme-toggle__icon {
     font-size: 1.05rem;
     line-height: 1;
     transition: opacity 0.2s ease, transform 0.3s ease;
 }
 
-.theme-toggle__icon--sun {
+.admin-theme-toggle__icon--sun {
     opacity: 1;
 }
 
-.theme-toggle__icon--moon {
+.admin-theme-toggle__icon--moon {
     opacity: 0.4;
 }
 
-.theme-toggle__label {
+.admin-theme-toggle__label {
     font-size: 0.8rem;
     font-weight: 700;
     color: var(--text-primary);
@@ -526,15 +586,15 @@ input[type=submit]:hover {
    to styling specific override if needed. 
    Actually base.html JS toggles .is-light class on button. 
 */
-.theme-toggle.is-light .theme-toggle__thumb {
+.admin-theme-toggle.is-light .admin-theme-toggle__thumb {
     transform: translateX(16px);
 }
 
-.theme-toggle.is-light .theme-toggle__track {
+.admin-theme-toggle.is-light .admin-theme-toggle__track {
     background: linear-gradient(135deg, #6d28d9, #db2777);
 }
 
-.theme-toggle.is-light .theme-toggle__icon--sun {
+.admin-theme-toggle.is-light .admin-theme-toggle__icon--sun {
     opacity: 0.4;
 }
 
@@ -544,30 +604,85 @@ input[type=submit]:hover {
    GLOBAL PAGE WIDTH (Match Storefront)
    ============================================= */
 #content {
-    max-width: var(--page-width);
-    margin: 0 auto;
+    max-width: none;
+    margin: 0;
     width: 100%;
-    padding: 20px 40px;
-    /* Tweak padding as needed */
+    padding: 24px clamp(18px, 2.5vw, 42px);
+    box-sizing: border-box;
+}
+
+/* Changelist width management */
+#changelist {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 16px;
+    align-items: start;
+    width: 100%;
+}
+
+#changelist #changelist-form,
+#changelist .results {
+    min-width: 0;
+}
+
+#changelist .results {
+    overflow-x: hidden;
+}
+
+#changelist-filter {
+    width: 100% !important;
+    margin: 0 !important;
+    justify-self: end;
+    max-width: 300px;
+    margin-left: auto !important;
+}
+
+/* Ensure result table fits viewport width without horizontal scrolling */
+#changelist table {
+    width: 100% !important;
+    table-layout: auto;
+}
+
+#changelist table th,
+#changelist table td {
+    overflow-wrap: normal;
+}
+
+#changelist-form input[type=text],
+#changelist-form input[type=number],
+#changelist-form .vTextField {
+    width: 96px !important;
+    max-width: 100%;
 }
 
 /* =============================================
    DASHBOARD UX IMPROVEMENTS
+   Left column: app modules
+   Right column: recent actions
    ============================================= */
-.dashboard #content {
-    display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(290px, 1fr);
-    gap: 22px;
-    padding-top: 16px;
+body.dashboard #content {
+    display: grid !important;
+    grid-template-columns: minmax(640px, 1.45fr) minmax(420px, 1fr) !important;
+    gap: clamp(20px, 2vw, 34px) !important;
+    align-items: start !important;
 }
 
-.dashboard #content-main,
-.dashboard #content-related {
+.dashboard #content>h1 {
+    grid-column: 1 / -1;
+    margin: 0 0 6px;
+}
+
+.dashboard #content-main {
+    grid-column: 1;
     float: none !important;
     width: auto !important;
 }
 
 .dashboard #content-related {
+    grid-column: 2;
+    float: none !important;
+    width: auto !important;
+    margin: 0 0 0 10px !important;
     position: sticky;
     top: calc(var(--navbar-height) + 18px);
     align-self: start;
@@ -575,6 +690,7 @@ input[type=submit]:hover {
 
 .dashboard .module {
     overflow: hidden;
+    margin-bottom: 20px !important;
 }
 
 .dashboard .module table {
@@ -596,30 +712,391 @@ input[type=submit]:hover {
     vertical-align: middle;
 }
 
+/* Keep left-column app list readable and avoid awkward wrapping */
+.dashboard #content-main .module table {
+    table-layout: auto;
+}
+
+.dashboard #content-main .module td:first-child,
+.dashboard #content-main .module th:first-child {
+    width: 100%;
+}
+
+.dashboard #content-main .module td a {
+    word-break: keep-all;
+}
+
 .dashboard .module td a {
     font-weight: 600;
 }
 
+#recent-actions-module {
+    border-radius: 16px !important;
+    overflow: hidden;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: 0 14px 30px rgba(109, 40, 217, 0.12) !important;
+}
+
+#recent-actions-module .actionlist {
+    margin: 0;
+    padding: 14px;
+    display: grid;
+    gap: 12px;
+    background: color-mix(in srgb, var(--bg-card) 88%, white);
+}
+
+.recent-actions-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 12px 0;
+}
+
+.recent-actions-clear-form {
+    margin: 0;
+}
+
+.recent-actions-clear-btn {
+    background: color-mix(in srgb, var(--bg-card) 82%, white);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.recent-actions-clear-btn:hover {
+    background: var(--danger-bg);
+    color: var(--danger-text);
+    border-color: color-mix(in srgb, var(--danger-text) 30%, var(--border-color));
+}
+
 #recent-actions-module .actionlist li {
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
+    list-style: none;
+    background: var(--bg-card) !important;
+    border: 1px solid color-mix(in srgb, var(--border-subtle) 65%, var(--border-color));
+    border-radius: 14px;
+    margin: 0;
+    padding: 12px 14px;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.25s ease,
+        background-color 0.25s ease;
+}
+
+#recent-actions-module .actionlist li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 12px;
+    bottom: 12px;
+    width: 4px;
     border-radius: 10px;
-    margin-bottom: 10px;
-    padding: 10px 12px;
+    background: var(--accent-primary);
+    opacity: 0.35;
+}
+
+#recent-actions-module .actionlist li.addlink::before {
+    opacity: 0.5;
+    background: var(--success-text);
+}
+
+#recent-actions-module .actionlist li.deletelink::before {
+    opacity: 0.55;
+    background: var(--danger-text);
 }
 
 #recent-actions-module .actionlist li:hover {
     border-color: var(--border-color);
-    box-shadow: 0 6px 18px rgba(109, 40, 217, 0.12);
+    box-shadow: 0 12px 28px rgba(109, 40, 217, 0.16);
+    transform: translateY(-2px);
+}
+
+#recent-actions-module .actionlist li a {
+    color: var(--text-primary) !important;
+    font-weight: 700;
+    font-size: 1.08rem;
+    line-height: 1.25;
+    text-decoration: none;
+}
+
+#recent-actions-module .actionlist li a:hover {
+    color: var(--accent-primary) !important;
+}
+
+#recent-actions-module .actionlist li .mini {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    background: var(--bg-soft);
+    border: 1px solid var(--border-subtle);
+    padding: 3px 8px;
+    border-radius: 999px;
+}
+
+#recent-actions-module .actionlist li.deletelink {
+    background: color-mix(in srgb, var(--danger-bg) 18%, var(--bg-card)) !important;
+    border-color: color-mix(in srgb, var(--danger-text) 25%, var(--border-subtle));
+}
+
+#recent-actions-module .actionlist li.addlink {
+    background: color-mix(in srgb, var(--success-bg) 16%, var(--bg-card)) !important;
+    border-color: color-mix(in srgb, var(--success-text) 20%, var(--border-subtle));
+}
+
+#recent-actions-module .actionlist li.changelink {
+    background: var(--bg-card) !important;
+}
+
+/* =============================================
+   CHANGE-LIST SNAPSHOT LOCK (Match latest target)
+   ============================================= */
+body.change-list #content-main {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+body.change-list #changelist {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 304px !important;
+    gap: 22px !important;
+    align-items: start !important;
+}
+
+body.change-list #changelist #changelist-form {
+    min-width: 0;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 14px !important;
+    overflow: hidden;
+    background: var(--bg-card) !important;
+}
+
+body.change-list #changelist-filter {
+    justify-self: end !important;
+    width: 304px !important;
+    max-width: 304px !important;
+    margin: 0 !important;
+}
+
+body.change-list #changelist .results {
+    overflow: visible !important;
+}
+
+body.change-list #changelist-search {
+    padding: 10px 12px !important;
+    margin: 0 !important;
+    min-height: 70px;
+}
+
+body.change-list #changelist-search input[type=text] {
+    width: 355px !important;
+    max-width: 355px !important;
+    height: 46px !important;
+}
+
+body.change-list #changelist-search input[type=submit] {
+    width: 112px !important;
+    min-width: 112px !important;
+    height: 46px !important;
+    padding: 0 12px !important;
+}
+
+body.change-list #changelist .actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex-wrap: nowrap !important;
+    padding: 10px 12px !important;
+    min-height: 58px;
+    margin: 0 !important;
+}
+
+body.change-list #changelist .actions label {
+    flex: 0 0 auto;
+    margin: 0 !important;
+}
+
+body.change-list #changelist .actions select {
+    width: 240px !important;
+    min-width: 240px !important;
+    max-width: 240px !important;
+    height: 44px !important;
+}
+
+body.change-list #changelist .actions button,
+body.change-list #changelist .actions .button,
+body.change-list #changelist .actions input[type=submit] {
+    width: 84px !important;
+    min-width: 84px !important;
+    height: 42px !important;
+    padding: 0 12px !important;
+}
+
+body.change-list #result_list {
+    width: 100% !important;
+    table-layout: fixed !important;
+    margin: 0 !important;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+body.change-list #result_list th,
+body.change-list #result_list td {
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}
+
+body.change-list #result_list thead th {
+    height: 42px;
+    padding: 10px 12px !important;
+}
+
+body.change-list #result_list tbody td {
+    padding: 10px 12px !important;
+    min-height: 94px;
+}
+
+body.change-list #result_list tbody tr {
+    height: 96px;
+}
+
+body.change-list #result_list th:nth-child(1),
+body.change-list #result_list td:nth-child(1) {
+    width: 36px;
+}
+
+body.change-list #result_list th:nth-child(2),
+body.change-list #result_list td:nth-child(2) {
+    width: 96px;
+}
+
+body.change-list #result_list th:nth-child(3),
+body.change-list #result_list td:nth-child(3) {
+    width: 162px;
+}
+
+body.change-list #result_list th:nth-child(4),
+body.change-list #result_list td:nth-child(4) {
+    width: auto;
+}
+
+body.change-list #result_list th:nth-child(5),
+body.change-list #result_list td:nth-child(5) {
+    width: 160px;
+}
+
+body.change-list #result_list th:nth-child(6),
+body.change-list #result_list td:nth-child(6) {
+    width: 124px;
+}
+
+body.change-list #result_list th:nth-child(7),
+body.change-list #result_list td:nth-child(7) {
+    width: 140px;
+}
+
+body.change-list #result_list td input[type=text],
+body.change-list #result_list td input[type=number] {
+    width: 100% !important;
+    max-width: 128px !important;
+    height: 44px !important;
+}
+
+body.change-list #result_list td.field-photo img {
+    width: 52px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid var(--accent-primary);
+    padding: 2px;
+    background: white;
+}
+
+body.change-list .paginator {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px;
+    min-height: 74px;
+    padding: 12px !important;
+    margin: 0 !important;
+}
+
+body.change-list .paginator .this-page {
+    margin-right: auto;
+}
+
+body.change-list .paginator input[type=submit],
+body.change-list .paginator .button {
+    margin-left: auto !important;
+    width: 90px !important;
+    min-width: 90px !important;
+    height: 48px !important;
+}
+
+/* Final polish: wider, cleaner, more attractive products changelist */
+body.change-list #changelist {
+    max-width: 1560px;
+    margin: 0 auto;
+    grid-template-columns: minmax(0, calc(100% - 334px)) 320px !important;
+    gap: 14px !important;
+}
+
+body.change-list #changelist #changelist-form {
+    border-radius: 16px !important;
+    box-shadow: 0 10px 26px rgba(109, 40, 217, 0.08);
+}
+
+body.change-list #changelist-search,
+body.change-list #changelist .actions {
+    background: color-mix(in srgb, var(--bg-card) 92%, white) !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+body.change-list #result_list thead th {
+    background: var(--bg-secondary) !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.25px;
+}
+
+body.change-list #result_list tbody tr:hover td {
+    background: color-mix(in srgb, var(--bg-card-hover) 92%, white) !important;
+}
+
+body.change-list #changelist-filter {
+    width: 320px !important;
+    max-width: 320px !important;
+    border-radius: 14px !important;
+    overflow: hidden;
+    box-shadow: 0 10px 24px rgba(109, 40, 217, 0.08);
 }
 
 @media (max-width: 1100px) {
-    .dashboard #content {
-        grid-template-columns: 1fr;
+    body.dashboard #content {
+        grid-template-columns: 1fr !important;
+    }
+
+    .dashboard #content-main,
+    .dashboard #content-related {
+        grid-column: 1;
     }
 
     .dashboard #content-related {
+        margin-left: 0 !important;
         position: static;
+    }
+
+    #changelist {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -632,14 +1109,20 @@ input[type=submit]:hover {
         font-size: 1.3rem !important;
     }
 
-    .theme-toggle {
+    .admin-theme-toggle {
         margin-left: 0;
         padding: 6px 10px !important;
     }
 
-    .theme-toggle__label {
+    .admin-theme-toggle__label {
         min-width: 0;
         font-size: 0.75rem;
+    }
+
+    .object-tools {
+        justify-content: flex-start;
+        margin-bottom: 10px !important;
+        flex-wrap: wrap;
     }
 
     .dashboard .module td,
@@ -648,6 +1131,6 @@ input[type=submit]:hover {
     }
 
     #recent-actions-module .actionlist li {
-        padding: 8px 10px;
+        padding: 10px 11px;
     }
 }

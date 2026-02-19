@@ -1,6 +1,5 @@
 ﻿from django.contrib import admin
 from django.utils.html import format_html
-from django.contrib import messages
 from .models import Category, Product
 
 
@@ -46,9 +45,6 @@ class ProductAdmin(admin.ModelAdmin):
     list_per_page       = 20
     ordering            = ("name",)
 
-    # Explicit actions list — ensures Delete is always present & works
-    actions = ["delete_selected_products"]
-
     # ----------------------------------------------------------------
     # Edit form
     # ----------------------------------------------------------------
@@ -81,20 +77,6 @@ class ProductAdmin(admin.ModelAdmin):
             },
         ),
     )
-
-    # ----------------------------------------------------------------
-    # Custom actions
-    # ----------------------------------------------------------------
-
-    @admin.action(description="Delete selected products")
-    def delete_selected_products(self, request, queryset):
-        count = queryset.count()
-        queryset.delete()
-        self.message_user(
-            request,
-            f"Successfully deleted {count} product(s).",
-            messages.SUCCESS,
-        )
 
     # ----------------------------------------------------------------
     # Custom display columns
