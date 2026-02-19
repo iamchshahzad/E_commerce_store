@@ -1,22 +1,105 @@
 /*
- * E-Shop Admin - Jazzmin Custom Overrides
- * Applied ON TOP of jazzmin's darkly bootstrap theme.
- * Adds purple gradient accents and premium polish.
+ * E-Shop Admin - Custom Theme (Light/Dark)
+ * Matches main site aesthetics.
  */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+/* ==============================================
+   GLOBAL COLOR TOKENS — Light mode (Default)
+   ============================================= */
 :root {
-    --eshop-purple: #7c3aed;
-    --eshop-pink: #ec4899;
-    --eshop-grad: linear-gradient(135deg, #7c3aed, #ec4899);
-    --eshop-glow: rgba(124, 58, 237, 0.4);
-    --eshop-dark: #0d0d1a;
-    --eshop-card: #13132a;
-    --eshop-border: rgba(124, 58, 237, 0.25);
-    --eshop-success: #10b981;
-    --eshop-danger: #ef4444;
+    /* Backgrounds */
+    --bg-primary: #f4f3ff;
+    --bg-secondary: #ede9fe;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f9f8ff;
+    --bg-input: #ffffff;
+    --bg-header: #ffffff;
+    --bg-sidebar: #f8f7ff;
+
+    /* Text */
+    --text-primary: #1a1040;
+    --text-secondary: #4c3b7a;
+    --text-muted: #7c6ea0;
+
+    /* Accents */
+    --accent-primary: #6d28d9;
+    --accent-gradient: linear-gradient(135deg, #6d28d9, #db2777);
+    --accent-glow: rgba(109, 40, 217, 0.25);
+
+    /* Borders */
+    --border-color: rgba(109, 40, 217, 0.15);
+    --border-subtle: rgba(0, 0, 0, 0.08);
+
+    /* Semantic */
+    --success-bg: rgba(16, 185, 129, 0.1);
+    --success-text: #059669;
+    --danger-bg: rgba(239, 68, 68, 0.1);
+    --danger-text: #b91c1c;
+
+    /* Logic */
+    --toggle-offset: 16px;
+    --toggle-bg: linear-gradient(135deg, #6d28d9, #db2777);
+    --sun-opacity: 0.4;
+    --moon-opacity: 1;
 }
+
+/* ==============================================
+   DARK MODE OVERRIDES
+   Apply when <html data-theme="dark">
+   ============================================= */
+[data-theme="dark"] {
+    /* Backgrounds */
+    --bg-primary: #0d0d1a;
+    --bg-secondary: #13132a;
+    --bg-card: #13132a;
+    --bg-card-hover: #1f1f40;
+    --bg-input: #1a1a35;
+    --bg-header: #0d0d1a;
+    --bg-sidebar: #0d0d1a;
+
+    /* Text */
+    --text-primary: #f0efff;
+    --text-secondary: #a09dc0;
+    --text-muted: #6b6890;
+
+    /* Accents */
+    --accent-primary: #7c3aed;
+    --accent-gradient: linear-gradient(135deg, #7c3aed, #ec4899);
+    --accent-glow: rgba(124, 58, 237, 0.4);
+
+    /* Borders */
+    --border-color: rgba(124, 58, 237, 0.25);
+    --border-subtle: rgba(255, 255, 255, 0.07);
+
+    /* Semantic */
+    --success-bg: rgba(16, 185, 129, 0.1);
+    --success-text: #34d399;
+    --danger-bg: rgba(239, 68, 68, 0.12);
+    --danger-text: #f87171;
+
+    /* Logic */
+    --toggle-offset: 0px;
+    /* Thumb stays left */
+    --toggle-bg: linear-gradient(135deg, #7c3aed, #ec4899);
+    --sun-opacity: 1;
+    --moon-opacity: 0.4;
+}
+
+/* Override dark mode toggle logic: thumb starts left in dark, right in light */
+/* Wait, I need strictly matching logic with style.css */
+/* In style.css: .is-light moves thumb */
+/* Here I'll use data-theme selector */
+
+[data-theme="light"] {
+    --toggle-offset: 16px;
+}
+
+[data-theme="dark"] {
+    --toggle-offset: 3px;
+}
+
 
 /* ---- Global font ---- */
 body,
@@ -25,425 +108,217 @@ body,
     font-family: 'Inter', sans-serif !important;
 }
 
-/* ---- Brand / logo in sidebar ---- */
-.brand-link {
-    background: var(--eshop-grad) !important;
-    border-bottom: none !important;
-    padding: 14px 16px !important;
+/* ---- Layout Backgrounds ---- */
+body {
+    margin: 0;
 }
 
-.brand-link .brand-text {
-    font-weight: 800 !important;
-    font-size: 1.2rem !important;
-    letter-spacing: -0.5px !important;
-    color: white !important;
+#container {
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
 }
 
-.brand-image {
-    display: none !important;
+/* ---- Header ---- */
+#header {
+    background: var(--bg-header) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    padding: 10px 20px !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-/* ---- Top navbar ---- */
-.main-header.navbar {
-    background: #0d0d1a !important;
-    border-bottom: 1px solid var(--eshop-border) !important;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5) !important;
+#branding h1 {
+    color: var(--text-primary) !important;
 }
 
-.main-header .navbar-nav .nav-link {
-    color: #a09dc0 !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-    padding: 6px 14px !important;
-    border-radius: 8px !important;
-    transition: all 0.2s ease !important;
-}
-
-.main-header .navbar-nav .nav-link:hover {
-    background: rgba(124, 58, 237, 0.15) !important;
-    color: #c084fc !important;
-}
-
-/* ---- Sidebar ---- */
-.main-sidebar {
-    background: #0d0d1a !important;
-    border-right: 1px solid var(--eshop-border) !important;
-    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.4) !important;
-}
-
-.sidebar-dark-purple .nav-sidebar>.nav-item>.nav-link.active,
-.sidebar-dark-purple .nav-sidebar>.nav-item>.nav-link:hover {
-    background: rgba(124, 58, 237, 0.2) !important;
-    color: #c084fc !important;
-}
-
-.nav-sidebar .nav-link {
-    border-radius: 8px !important;
-    margin: 2px 8px !important;
-    font-size: 0.875rem !important;
-    font-weight: 500 !important;
-    color: #9d9abf !important;
-    transition: all 0.2s ease !important;
-}
-
-.nav-sidebar .nav-header {
-    font-size: 0.7rem !important;
-    font-weight: 700 !important;
-    letter-spacing: 1px !important;
-    text-transform: uppercase !important;
-    color: #5a5880 !important;
-    padding: 12px 16px 4px !important;
-}
-
-/* ---- Page content bg ---- */
-.content-wrapper {
-    background: #0d0d1a !important;
-}
-
-/* ---- Page header / breadcrumb ---- */
-.content-header h1 {
-    font-size: 1.6rem !important;
-    font-weight: 800 !important;
-    background: var(--eshop-grad) !important;
+#branding a {
+    background: var(--accent-gradient) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
+    font-weight: 800 !important;
 }
 
-.breadcrumb {
-    background: transparent !important;
-    font-size: 0.82rem !important;
+/* User tools (welcome, logout etc) */
+#user-tools {
+    color: var(--text-secondary) !important;
 }
 
-.breadcrumb-item a {
-    color: #a855f7 !important;
-}
-
-.breadcrumb-item.active {
-    color: #6b6890 !important;
-}
-
-/* ---- Cards / modules ---- */
-.card {
-    background: #13132a !important;
-    border: 1px solid rgba(255, 255, 255, 0.07) !important;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4) !important;
-    overflow: hidden !important;
-}
-
-.card-header {
-    background: var(--eshop-grad) !important;
+#user-tools a {
+    color: var(--accent-primary) !important;
     border-bottom: none !important;
-    padding: 14px 20px !important;
 }
 
-.card-header h3,
-.card-header .card-title {
-    font-weight: 700 !important;
-    font-size: 0.9rem !important;
-    color: white !important;
-    letter-spacing: 0.3px !important;
-    margin: 0 !important;
-}
-
-/* ---- Tables (changelist) ---- */
-.table thead th {
-    background: rgba(124, 58, 237, 0.1) !important;
-    color: #f0efff !important;
-    font-size: 0.75rem !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.6px !important;
-    border-color: rgba(124, 58, 237, 0.2) !important;
-    white-space: nowrap !important;
-}
-
-.table tbody td,
-.table tbody th {
-    color: #a09dc0 !important;
-    border-color: rgba(255, 255, 255, 0.05) !important;
-    vertical-align: middle !important;
-    font-size: 0.875rem !important;
-}
-
-.table tbody tr:hover td,
-.table tbody tr:hover th {
-    background: rgba(124, 58, 237, 0.06) !important;
-}
-
-/* Inline editable cells */
-.table input[type="text"],
-.table input[type="number"],
-.table select {
-    background: #1a1a35 !important;
-    border: 1px solid rgba(124, 58, 237, 0.3) !important;
-    color: #f0efff !important;
-    border-radius: 7px !important;
-    padding: 5px 10px !important;
-    font-size: 0.875rem !important;
-    min-width: 80px !important;
-}
-
-.table input:focus,
-.table select:focus {
-    border-color: #7c3aed !important;
-    box-shadow: 0 0 0 3px var(--eshop-glow) !important;
-    outline: none !important;
-}
-
-/* ---- Filters sidebar ---- */
-#changelist-filter {
-    background: #0d0d1a !important;
-    border-left: 1px solid var(--eshop-border) !important;
-    padding: 16px !important;
-}
-
-#changelist-filter h2 {
-    background: var(--eshop-grad) !important;
-    color: white !important;
-    font-size: 0.72rem !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.8px !important;
-    padding: 8px 14px !important;
-    border-radius: 8px !important;
-    margin-bottom: 10px !important;
-}
-
-#changelist-filter h3 {
-    color: #6b6890 !important;
-    font-size: 0.72rem !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.6px !important;
-}
-
-#changelist-filter li a {
-    color: #9d9abf !important;
-    font-size: 0.85rem !important;
-}
-
-#changelist-filter li.selected a,
-#changelist-filter li a:hover {
-    color: #c084fc !important;
-}
-
-/* ---- Search bar ---- */
-#toolbar form input[type="text"],
-#searchbar {
-    background: #1a1a35 !important;
-    border: 1px solid var(--eshop-border) !important;
-    color: #f0efff !important;
-    border-radius: 8px !important;
-    padding: 8px 14px !important;
-}
-
-#searchbar:focus {
-    border-color: #7c3aed !important;
-    outline: none !important;
-}
-
-/* ---- Actions bar ---- */
-.actions {
-    background: #13132a !important;
-    border-radius: 8px !important;
-    border: 1px solid rgba(255, 255, 255, 0.06) !important;
-    padding: 10px 14px !important;
-}
-
-.actions select {
-    background: #1a1a35 !important;
-    border: 1px solid var(--eshop-border) !important;
-    color: #f0efff !important;
-    border-radius: 7px !important;
-}
-
-/* ---- Form fieldsets ---- */
-fieldset.module {
-    background: #13132a !important;
-    border: 1px solid rgba(255, 255, 255, 0.07) !important;
+/* ---- Sidebar / Content ---- */
+.module {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
     border-radius: 12px !important;
-    overflow: hidden !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
     margin-bottom: 20px !important;
 }
 
-fieldset.module h2 {
-    background: var(--eshop-grad) !important;
+.module h2,
+.module caption,
+.inline-group h2 {
+    background: var(--accent-gradient) !important;
     color: white !important;
-    font-size: 0.78rem !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.8px !important;
     padding: 12px 18px !important;
-    margin: 0 !important;
-    cursor: pointer !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+    text-transform: uppercase !important;
 }
 
+/* Links */
+a:link,
+a:visited {
+    color: var(--accent-primary);
+}
+
+div.breadcrumbs {
+    background: transparent !important;
+    color: var(--text-secondary) !important;
+}
+
+div.breadcrumbs a {
+    color: var(--accent-primary) !important;
+}
+
+/* Form rows */
 .form-row {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+    padding: 12px !important;
 }
 
-.form-row:last-child {
-    border-bottom: none !important;
-}
-
-label {
-    color: #f0efff !important;
-    font-weight: 600 !important;
-    font-size: 0.875rem !important;
-}
-
-.help {
-    color: #6b6890 !important;
-    font-size: 0.78rem !important;
-}
-
-/* Form inputs */
-input[type="text"],
-input[type="number"],
-input[type="email"],
-input[type="password"],
-input[type="url"],
+/* Inputs */
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=url],
+input[type=number],
 textarea,
-select:not(.table select) {
-    background: #1a1a35 !important;
-    border: 1px solid var(--eshop-border) !important;
-    color: #f0efff !important;
-    border-radius: 8px !important;
-    padding: 9px 14px !important;
-    font-size: 0.9rem !important;
-    font-family: 'Inter', sans-serif !important;
-    transition: all 0.2s ease !important;
+select,
+.vTextField {
+    background: var(--bg-input) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    border-radius: 6px !important;
+    padding: 8px !important;
 }
 
 input:focus,
 textarea:focus,
 select:focus {
-    border-color: #7c3aed !important;
-    box-shadow: 0 0 0 3px var(--eshop-glow) !important;
-    outline: none !important;
+    border-color: var(--accent-primary) !important;
+    box-shadow: 0 0 0 3px var(--accent-glow) !important;
 }
 
-textarea {
-    min-height: 90px !important;
-    resize: vertical !important;
-}
-
-input[type="file"] {
-    background: transparent !important;
-    border: 2px dashed var(--eshop-border) !important;
-    border-radius: 8px !important;
-    padding: 12px !important;
-    color: #9d9abf !important;
-    cursor: pointer !important;
-}
-
-input[type="file"]:hover {
-    border-color: #7c3aed !important;
-    background: rgba(124, 58, 237, 0.04) !important;
-}
-
-input[type="checkbox"] {
-    width: 17px !important;
-    height: 17px !important;
-    accent-color: #7c3aed !important;
-}
-
-/* ---- Buttons ---- */
-.btn-primary,
-input[type="submit"].default,
-.submit-row input[type="submit"] {
-    background: var(--eshop-grad) !important;
+/* Buttons */
+.button,
+input[type=submit],
+input[type=button],
+.submit-row input,
+a.button {
+    background: var(--accent-gradient) !important;
     border: none !important;
-    font-weight: 700 !important;
-    box-shadow: 0 4px 14px var(--eshop-glow) !important;
-    border-radius: 8px !important;
-    transition: all 0.2s ease !important;
-}
-
-.btn-primary:hover,
-input[type="submit"].default:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px var(--eshop-glow) !important;
-}
-
-.btn-danger,
-a.deletelink {
-    background: rgba(239, 68, 68, 0.12) !important;
-    color: #f87171 !important;
-    border: 1px solid rgba(239, 68, 68, 0.3) !important;
-    font-weight: 600 !important;
-    border-radius: 8px !important;
-}
-
-.btn-danger:hover,
-a.deletelink:hover {
-    background: #ef4444 !important;
     color: white !important;
-    border-color: #ef4444 !important;
+    padding: 10px 20px !important;
+    border-radius: 6px !important;
+    text-transform: uppercase !important;
+    font-weight: 700 !important;
+    transition: transform 0.2s !important;
 }
 
-/* ---- Submit row ---- */
-.submit-row {
-    background: #13132a !important;
-    border: 1px solid rgba(255, 255, 255, 0.06) !important;
-    border-radius: 10px !important;
-    padding: 16px 20px !important;
-    gap: 10px !important;
+.button:hover,
+input[type=submit]:hover {
+    transform: translateY(-1px) !important;
+    opacity: 0.9 !important;
 }
 
-/* ---- Messages ---- */
-.alert-success {
-    background: rgba(16, 185, 129, 0.1) !important;
-    border-color: rgba(16, 185, 129, 0.3) !important;
-    color: #34d399 !important;
-    border-radius: 8px !important;
+.deletelink {
+    background: var(--danger-bg) !important;
+    color: var(--danger-text) !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    border-radius: 6px !important;
+    padding: 8px 16px !important;
 }
 
-.alert-warning {
-    background: rgba(245, 158, 11, 0.1) !important;
-    border-color: rgba(245, 158, 11, 0.3) !important;
-    color: #fbbf24 !important;
-    border-radius: 8px !important;
+/* Tables */
+#changelist table {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
 }
 
-.alert-danger {
-    background: rgba(239, 68, 68, 0.1) !important;
-    border-color: rgba(239, 68, 68, 0.3) !important;
-    color: #f87171 !important;
-    border-radius: 8px !important;
+#changelist table thead th {
+    background: var(--bg-secondary) !important;
+    color: var(--text-secondary) !important;
+    border-bottom: 2px solid var(--border-color) !important;
 }
 
-/* ---- Footer ---- */
-.main-footer {
-    background: #0d0d1a !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
-    color: #6b6890 !important;
-    font-size: 0.8rem !important;
+#changelist table tbody tr {
+    background: transparent !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
 }
 
-/* ---- Responsive ---- */
-@media (max-width: 767px) {
-    .content-header h1 {
-        font-size: 1.2rem !important;
-    }
+#changelist table tbody tr.row1 {
+    background: transparent !important;
+}
 
-    .submit-row {
-        flex-direction: column !important;
-    }
+#changelist table tbody tr.row2 {
+    background: transparent !important;
+}
 
-    .submit-row input,
-    .submit-row .btn,
-    .submit-row a {
-        width: 100% !important;
-        text-align: center !important;
-    }
+#changelist table tbody tr:hover {
+    background: var(--bg-card-hover) !important;
+}
 
-    input[type="text"],
-    input[type="number"],
-    textarea,
-    select {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
+#changelist table td {
+    color: var(--text-primary) !important;
+}
+
+/* Filter sidebar */
+#changelist-filter {
+    background: var(--bg-secondary) !important;
+    border-left: 1px solid var(--border-color) !important;
+}
+
+#changelist-filter h2 {
+    background: var(--accent-gradient) !important;
+    color: white !important;
+    padding: 8px !important;
+    border-radius: 6px !important;
+}
+
+#changelist-filter li.selected a {
+    color: var(--accent-primary) !important;
+}
+
+/* ==============================================
+   THEME TOGGLE BUTTON (Simplified for Admin)
+   ============================================= */
+.admin-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    cursor: pointer;
+    margin-left: 15px;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.admin-theme-toggle:hover {
+    background: var(--bg-card-hover);
+    color: var(--accent-primary);
+}
+
+.theme-icon {
+    font-size: 1.2rem;
 }

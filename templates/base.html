@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
@@ -13,8 +13,18 @@
     <!-- Apply saved theme before paint to eliminate flash -->
     <script>
         (function () {
-            var t = localStorage.getItem('eshop-theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', t);
+            var key = 'eshop-theme';
+            var fallback = 'light';
+            var theme = fallback;
+            try {
+                var saved = localStorage.getItem(key);
+                if (saved === 'light' || saved === 'dark') {
+                    theme = saved;
+                }
+            } catch (e) {
+                theme = fallback;
+            }
+            document.documentElement.setAttribute('data-theme', theme);
         })();
     </script>
 </head>
@@ -38,12 +48,14 @@
         </ul>
 
         <!-- Dark / Light mode toggle -->
-        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode" title="Toggle theme">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode" title="Toggle theme"
+            type="button">
             <span class="theme-toggle__track">
                 <span class="theme-toggle__thumb"></span>
             </span>
             <span class="theme-toggle__icon theme-toggle__icon--sun">&#9728;</span>
             <span class="theme-toggle__icon theme-toggle__icon--moon">&#9790;</span>
+            <span class="theme-toggle__label" id="theme-toggle-label">Light</span>
         </button>
     </nav>
 
@@ -60,42 +72,63 @@
         // ---- Hamburger menu ----
         const hamburger = document.getElementById('hamburger');
         const nav = document.getElementById('navbar-nav');
-        hamburger.addEventListener('click', () => {
-            const isOpen = nav.classList.toggle('open');
-            hamburger.classList.toggle('open', isOpen);
-            hamburger.setAttribute('aria-expanded', isOpen);
-        });
-        nav.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                nav.classList.remove('open');
-                hamburger.classList.remove('open');
-                hamburger.setAttribute('aria-expanded', false);
+        if (hamburger && nav) {
+            hamburger.addEventListener('click', () => {
+                const isOpen = nav.classList.toggle('open');
+                hamburger.classList.toggle('open', isOpen);
+                hamburger.setAttribute('aria-expanded', String(isOpen));
             });
-        });
+            nav.querySelectorAll('.nav-link').forEach((link) => {
+                link.addEventListener('click', () => {
+                    nav.classList.remove('open');
+                    hamburger.classList.remove('open');
+                    hamburger.setAttribute('aria-expanded', 'false');
+                });
+            });
+        }
 
         // ---- Dark / Light mode toggle ----
         const root = document.documentElement;
         const themeBtn = document.getElementById('theme-toggle');
+        const themeLabel = document.getElementById('theme-toggle-label');
         const STORAGE_KEY = 'eshop-theme';
 
         function applyTheme(theme) {
             root.setAttribute('data-theme', theme);
-            localStorage.setItem(STORAGE_KEY, theme);
-            // Swap aria label
-            themeBtn.setAttribute(
-                'aria-label',
-                theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
-            );
-            themeBtn.classList.toggle('is-light', theme === 'light');
+            try {
+                localStorage.setItem(STORAGE_KEY, theme);
+            } catch (e) { }
+
+            if (themeBtn) {
+                themeBtn.setAttribute(
+                    'aria-label',
+                    theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+                );
+                themeBtn.classList.toggle('is-light', theme === 'light');
+            }
+
+            if (themeLabel) {
+                themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
+            }
         }
 
         // Init from saved preference (already set in <head> to avoid flash)
-        applyTheme(localStorage.getItem(STORAGE_KEY) || 'dark');
+        let initialTheme = 'light';
+        try {
+            const savedTheme = localStorage.getItem(STORAGE_KEY);
+            if (savedTheme === 'light' || savedTheme === 'dark') {
+                initialTheme = savedTheme;
+            }
+        } catch (e) { }
+        applyTheme(initialTheme);
 
-        themeBtn.addEventListener('click', () => {
-            const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            applyTheme(next);
-        });
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                const currentTheme = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+                const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                applyTheme(nextTheme);
+            });
+        }
     </script>
 
 </body>
