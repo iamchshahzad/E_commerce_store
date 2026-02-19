@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Products - E-Shop{% endblock %}
+
+{% block content %}
+<h1 class="text-center mb-4">Our Products</h1>
+
+<div class="product-grid">
+    {% for product in products %}
+    <div class="product-card">
+        <a href="{% url 'product_detail' product.pk %}">
+            <div class="product-image">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                <span>{{ product.name|slice:":1" }}</span>
+                {% endif %}
+            </div>
+        </a>
+        <div class="product-details">
+            <h3 class="product-title">
+                <a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a>
+            </h3>
+            <p class="detail-meta">Category: {{ product.category.name }}</p>
+            <p class="product-price">${{ product.price }}</p>
+            <p class="product-description">{{ product.description|truncatewords:15 }}</p>
+            <form method="post" action="{% url 'add_to_cart' product.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{% url 'cart_detail' %}">
+                <button type="submit" class="btn btn-block" style="margin-bottom: 10px;">Add to Cart</button>
+            </form>
+            <a href="{% url 'product_detail' product.pk %}" class="btn btn-block">View Details</a>
+        </div>
+    </div>
+    {% empty %}
+    <p>No products available yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

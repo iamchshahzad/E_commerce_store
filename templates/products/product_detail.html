@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} - E-Shop{% endblock %}
+
+{% block content %}
+<div class="product-detail-container">
+    <div class="detail-image">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+        <span>{{ product.name|slice:":1" }}</span>
+        {% endif %}
+    </div>
+    <div class="detail-info">
+        <h1 class="detail-title">{{ product.name }}</h1>
+        <p class="detail-meta">Category: {{ product.category.name }} | Stock: {{ product.stock }}</p>
+        <p class="detail-price">${{ product.price }}</p>
+        <div class="detail-description">
+            <p>{{ product.description }}</p>
+        </div>
+        <form method="post" action="{% url 'add_to_cart' product.pk %}" style="display: inline;">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{% url 'cart_detail' %}">
+            <button type="submit" class="btn">Add to Cart</button>
+        </form>
+        <a href="{% url 'product_list' %}" class="btn" style="background-color: #6c757d; margin-left: 10px;">Back to
+            Products</a>
+    </div>
+</div>
+{% endblock %}
