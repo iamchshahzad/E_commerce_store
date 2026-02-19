@@ -1,9 +1,9 @@
-from django.contrib import admin
+﻿from django.contrib import admin
 from django.utils.html import format_html
 from .models import Category, Product
 
 
-# ─── Category Admin ──────────────────────────────────────────────────────────
+# --- Category Admin ---
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -20,12 +20,12 @@ class CategoryAdmin(admin.ModelAdmin):
         )
 
 
-# ─── Product Admin ────────────────────────────────────────────────────────────
+# --- Product Admin ---
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
 
-    # ── List view ──────────────────────────────────────────
+    # -- List view --
     list_display = (
         "image_thumbnail",
         "name",
@@ -41,35 +41,35 @@ class ProductAdmin(admin.ModelAdmin):
     list_per_page = 20
     ordering = ("name",)
 
-    # ── Detail / edit form ─────────────────────────────────
+    # -- Detail / edit form --
     readonly_fields = ("image_preview",)
 
     fieldsets = (
         (
-            "📋 Basic Information",
+            "Basic Information",
             {
                 "fields": ("name", "description", "category"),
                 "classes": ("wide",),
             },
         ),
         (
-            "💰 Pricing & Stock",
+            "Pricing and Stock",
             {
                 "fields": ("price", "stock"),
                 "classes": ("wide",),
             },
         ),
         (
-            "🖼️ Product Image",
+            "Product Image",
             {
                 "fields": ("image", "image_preview"),
                 "classes": ("wide",),
-                "description": "Upload a product photo. Recommended: square image, min 600×600px.",
+                "description": "Upload a product photo. Recommended: square image, min 600x600px.",
             },
         ),
     )
 
-    # ── Custom methods ─────────────────────────────────────
+    # -- Custom display methods --
 
     @admin.display(description="Image")
     def image_thumbnail(self, obj):
@@ -83,7 +83,7 @@ class ProductAdmin(admin.ModelAdmin):
         return format_html(
             '<div style="'
             "width:56px; height:56px; border-radius:8px;"
-            "background: linear-gradient(135deg,#7c3aed,#ec4899);"
+            "background:linear-gradient(135deg,#7c3aed,#ec4899);"
             "display:flex; align-items:center; justify-content:center;"
             'font-size:1.4rem; font-weight:800; color:white;">{}</div>',
             obj.name[0].upper() if obj.name else "?",
@@ -92,11 +92,11 @@ class ProductAdmin(admin.ModelAdmin):
     @admin.display(description="Stock Status")
     def stock_status(self, obj):
         if obj.stock == 0:
-            badge = ("❌ Out of Stock", "#ef4444", "#2d1010")
+            badge = ("Out of Stock", "#ef4444", "#2d1010")
         elif obj.stock <= 5:
-            badge = ("⚠️ Low Stock", "#f59e0b", "#2d2010")
+            badge = ("Low Stock", "#f59e0b", "#2d2010")
         else:
-            badge = ("✅ In Stock", "#10b981", "#0d2d1e")
+            badge = ("In Stock", "#10b981", "#0d2d1e")
         label, color, bg = badge
         return format_html(
             '<span style="'
@@ -117,7 +117,6 @@ class ProductAdmin(admin.ModelAdmin):
                 obj.image.url,
             )
         return format_html(
-            '<p style="color:#6b6890; font-style:italic;">'
-            "No image uploaded yet."
-            "</p>"
+            '<p style="color:#6b6890; font-style:italic;">{}</p>',
+            "No image uploaded yet.",
         )

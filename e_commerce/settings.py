@@ -48,10 +48,11 @@ JAZZMIN_SETTINGS = {
     "custom_js": None,
     "use_google_fonts_cdn": True,
     "show_ui_builder": False,
-    "changeform_format": "horizontal_tabs",
+    "changeform_format": "collapsible",
     "changeform_format_overrides": {
+        "products.product": "collapsible",
         "auth.user": "collapsible",
-        "auth.group": "vertical_tabs",
+        "auth.group": "collapsible",
     },
 }
 
