@@ -1,20 +1,28 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="E-Shop — Premium online store with the best products at amazing prices.">
     <title>{% block title %}E-Shop — Premium Store{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Apply saved theme before paint to eliminate flash -->
+    <script>
+        (function () {
+            var t = localStorage.getItem('eshop-theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
 </head>
+
 <body>
 
     <nav class="navbar">
-        <a href="{% url 'product_list' %}" class="navbar-brand">⚡ E-Shop</a>
+        <a href="{% url 'product_list' %}" class="navbar-brand">&#9889; E-Shop</a>
 
         <!-- Hamburger button (mobile) -->
         <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
@@ -24,10 +32,19 @@
         </button>
 
         <ul class="navbar-nav" id="navbar-nav">
-            <li><a href="{% url 'product_list' %}" class="nav-link">🏠 Home</a></li>
-            <li><a href="{% url 'cart_detail' %}" class="nav-link">🛒 Cart</a></li>
-            <li><a href="{% url 'admin:index' %}" class="nav-link">⚙️ Admin</a></li>
+            <li><a href="{% url 'product_list' %}" class="nav-link">&#127968; Home</a></li>
+            <li><a href="{% url 'cart_detail' %}" class="nav-link">&#128722; Cart</a></li>
+            <li><a href="{% url 'admin:index' %}" class="nav-link">&#9881; Admin</a></li>
         </ul>
+
+        <!-- Dark / Light mode toggle -->
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode" title="Toggle theme">
+            <span class="theme-toggle__track">
+                <span class="theme-toggle__thumb"></span>
+            </span>
+            <span class="theme-toggle__icon theme-toggle__icon--sun">&#9728;</span>
+            <span class="theme-toggle__icon theme-toggle__icon--moon">&#9790;</span>
+        </button>
     </nav>
 
     <div class="container">
@@ -36,11 +53,11 @@
     </div>
 
     <footer class="footer">
-        <p>© 2026 <strong>E-Shop</strong>. Crafted with ❤️ — All rights reserved.</p>
+        <p>&copy; 2026 <strong>E-Shop</strong>. Crafted with &#10084; &mdash; All rights reserved.</p>
     </footer>
 
     <script>
-        // Hamburger toggle
+        // ---- Hamburger menu ----
         const hamburger = document.getElementById('hamburger');
         const nav = document.getElementById('navbar-nav');
         hamburger.addEventListener('click', () => {
@@ -48,7 +65,6 @@
             hamburger.classList.toggle('open', isOpen);
             hamburger.setAttribute('aria-expanded', isOpen);
         });
-        // Close menu on link click
         nav.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', () => {
                 nav.classList.remove('open');
@@ -56,7 +72,32 @@
                 hamburger.setAttribute('aria-expanded', false);
             });
         });
+
+        // ---- Dark / Light mode toggle ----
+        const root = document.documentElement;
+        const themeBtn = document.getElementById('theme-toggle');
+        const STORAGE_KEY = 'eshop-theme';
+
+        function applyTheme(theme) {
+            root.setAttribute('data-theme', theme);
+            localStorage.setItem(STORAGE_KEY, theme);
+            // Swap aria label
+            themeBtn.setAttribute(
+                'aria-label',
+                theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+            );
+            themeBtn.classList.toggle('is-light', theme === 'light');
+        }
+
+        // Init from saved preference (already set in <head> to avoid flash)
+        applyTheme(localStorage.getItem(STORAGE_KEY) || 'dark');
+
+        themeBtn.addEventListener('click', () => {
+            const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+        });
     </script>
 
 </body>
+
 </html>
