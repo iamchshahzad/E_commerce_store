@@ -1,807 +1,431 @@
 /*
- * E-Shop Admin — Custom Dark Theme
- * Overrides Django's default admin styles.
- * Loaded via templates/admin/base_site.html
+ * E-Shop Admin - Jazzmin Custom Overrides
+ * Applied ON TOP of jazzmin's darkly bootstrap theme.
+ * Adds purple gradient accents and premium polish.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* ============================================================
-   CSS Variables — Dark Purple Palette (matches frontend)
-   ============================================================ */
 :root {
-    --admin-bg: #0d0d1a;
-    --admin-bg-2: #12122a;
-    --admin-bg-card: #1a1a35;
-    --admin-bg-input: #13132a;
-    --admin-accent: #7c3aed;
-    --admin-accent-light: #a855f7;
-    --admin-accent-grad: linear-gradient(135deg, #7c3aed, #ec4899);
-    --admin-glow: rgba(124, 58, 237, 0.35);
-    --admin-text: #f0efff;
-    --admin-text-muted: #9d9abf;
-    --admin-border: rgba(124, 58, 237, 0.25);
-    --admin-border-subtle: rgba(255, 255, 255, 0.07);
-    --admin-success: #10b981;
-    --admin-danger: #ef4444;
-    --admin-warning: #f59e0b;
-    --admin-radius: 10px;
-    --admin-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --eshop-purple: #7c3aed;
+    --eshop-pink: #ec4899;
+    --eshop-grad: linear-gradient(135deg, #7c3aed, #ec4899);
+    --eshop-glow: rgba(124, 58, 237, 0.4);
+    --eshop-dark: #0d0d1a;
+    --eshop-card: #13132a;
+    --eshop-border: rgba(124, 58, 237, 0.25);
+    --eshop-success: #10b981;
+    --eshop-danger: #ef4444;
 }
 
-/* ============================================================
-   Global Reset
-   ============================================================ */
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
-
+/* ---- Global font ---- */
 body,
-#container,
-.content-wrapper {
-    font-family: 'Inter', 'Segoe UI', sans-serif !important;
-    background: var(--admin-bg) !important;
-    color: var(--admin-text) !important;
+.navbar,
+.sidebar {
+    font-family: 'Inter', sans-serif !important;
 }
 
-a {
-    color: var(--admin-accent-light) !important;
-    transition: var(--admin-transition);
+/* ---- Brand / logo in sidebar ---- */
+.brand-link {
+    background: var(--eshop-grad) !important;
+    border-bottom: none !important;
+    padding: 14px 16px !important;
 }
 
-a:hover {
+.brand-link .brand-text {
+    font-weight: 800 !important;
+    font-size: 1.2rem !important;
+    letter-spacing: -0.5px !important;
+    color: white !important;
+}
+
+.brand-image {
+    display: none !important;
+}
+
+/* ---- Top navbar ---- */
+.main-header.navbar {
+    background: #0d0d1a !important;
+    border-bottom: 1px solid var(--eshop-border) !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+.main-header .navbar-nav .nav-link {
+    color: #a09dc0 !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+    padding: 6px 14px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+}
+
+.main-header .navbar-nav .nav-link:hover {
+    background: rgba(124, 58, 237, 0.15) !important;
     color: #c084fc !important;
 }
 
-/* ============================================================
-   Header / Branding Bar
-   ============================================================ */
-#header {
-    background: var(--admin-bg-2) !important;
-    border-bottom: 1px solid var(--admin-border) !important;
-    padding: 0 24px !important;
-    height: 60px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 1000 !important;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4) !important;
+/* ---- Sidebar ---- */
+.main-sidebar {
+    background: #0d0d1a !important;
+    border-right: 1px solid var(--eshop-border) !important;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.4) !important;
 }
 
-#branding h1,
-#branding h1 a,
-#branding h1 a:hover {
-    font-size: 1.35rem !important;
+.sidebar-dark-purple .nav-sidebar>.nav-item>.nav-link.active,
+.sidebar-dark-purple .nav-sidebar>.nav-item>.nav-link:hover {
+    background: rgba(124, 58, 237, 0.2) !important;
+    color: #c084fc !important;
+}
+
+.nav-sidebar .nav-link {
+    border-radius: 8px !important;
+    margin: 2px 8px !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    color: #9d9abf !important;
+    transition: all 0.2s ease !important;
+}
+
+.nav-sidebar .nav-header {
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    color: #5a5880 !important;
+    padding: 12px 16px 4px !important;
+}
+
+/* ---- Page content bg ---- */
+.content-wrapper {
+    background: #0d0d1a !important;
+}
+
+/* ---- Page header / breadcrumb ---- */
+.content-header h1 {
+    font-size: 1.6rem !important;
     font-weight: 800 !important;
-    background: var(--admin-accent-grad) !important;
+    background: var(--eshop-grad) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
-    letter-spacing: -0.5px !important;
-    text-decoration: none !important;
 }
 
-#user-tools {
-    color: var(--admin-text-muted) !important;
-    font-size: 0.85rem !important;
-}
-
-#user-tools a {
-    color: var(--admin-accent-light) !important;
-    padding: 6px 12px !important;
-    border-radius: 7px !important;
-    border: 1px solid var(--admin-border) !important;
-    margin-left: 6px !important;
-}
-
-#user-tools a:hover {
-    background: var(--admin-accent) !important;
-    color: white !important;
-    -webkit-text-fill-color: white !important;
-}
-
-/* ============================================================
-   Breadcrumbs
-   ============================================================ */
-div.breadcrumbs {
-    background: var(--admin-bg-2) !important;
-    border-bottom: 1px solid var(--admin-border-subtle) !important;
-    color: var(--admin-text-muted) !important;
-    padding: 10px 24px !important;
+.breadcrumb {
+    background: transparent !important;
     font-size: 0.82rem !important;
 }
 
-div.breadcrumbs a {
-    color: var(--admin-accent-light) !important;
+.breadcrumb-item a {
+    color: #a855f7 !important;
 }
 
-div.breadcrumbs a:hover {
-    color: #c084fc !important;
+.breadcrumb-item.active {
+    color: #6b6890 !important;
 }
 
-/* ============================================================
-   Sidebar Navigation
-   ============================================================ */
-#nav-sidebar,
-.sticky.collapsed-nav {
-    background: var(--admin-bg-2) !important;
-    border-right: 1px solid var(--admin-border) !important;
-}
-
-.module caption,
-#nav-sidebar .module caption {
-    background: var(--admin-accent-grad) !important;
-    color: white !important;
-    font-weight: 700 !important;
-    font-size: 0.75rem !important;
-    letter-spacing: 0.8px !important;
-    text-transform: uppercase !important;
-    padding: 10px 16px !important;
-    border-radius: var(--admin-radius) var(--admin-radius) 0 0 !important;
-}
-
-#nav-sidebar th a,
-#nav-sidebar td a {
-    color: var(--admin-text-muted) !important;
-    padding: 8px 16px !important;
-    display: block !important;
-    border-radius: 7px !important;
-    transition: var(--admin-transition) !important;
-    font-size: 0.875rem !important;
-}
-
-#nav-sidebar th a:hover,
-#nav-sidebar td a:hover,
-#nav-sidebar .current-app th a {
-    background: rgba(124, 58, 237, 0.15) !important;
-    color: var(--admin-accent-light) !important;
-    -webkit-text-fill-color: var(--admin-accent-light) !important;
-}
-
-#toggle-nav-sidebar {
-    background: var(--admin-bg-2) !important;
-    border-right: 1px solid var(--admin-border) !important;
-    color: var(--admin-text-muted) !important;
-}
-
-/* ============================================================
-   Main Content Area
-   ============================================================ */
-#content,
-#content-main {
-    background: transparent !important;
-    padding: 24px !important;
-}
-
-#content h1 {
-    font-size: 1.6rem !important;
-    font-weight: 800 !important;
-    background: var(--admin-accent-grad) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    background-clip: text !important;
-    margin-bottom: 20px !important;
-}
-
-/* ============================================================
-   Dashboard App Modules (index page)
-   ============================================================ */
-.app-products>caption,
-.app-cart>caption,
-.app-orders>caption,
-.app-users>caption,
-.app-auth>caption {
-    background: var(--admin-accent-grad) !important;
-}
-
-.module {
-    background: var(--admin-bg-card) !important;
-    border: 1px solid var(--admin-border-subtle) !important;
-    border-radius: var(--admin-radius) !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
-    margin-bottom: 20px !important;
+/* ---- Cards / modules ---- */
+.card {
+    background: #13132a !important;
+    border: 1px solid rgba(255, 255, 255, 0.07) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4) !important;
     overflow: hidden !important;
 }
 
-.module table {
-    background: transparent !important;
-    width: 100% !important;
-}
-
-.module th,
-.module td {
-    background: transparent !important;
-    color: var(--admin-text-muted) !important;
-    padding: 10px 16px !important;
-    border-bottom: 1px solid var(--admin-border-subtle) !important;
-    font-size: 0.875rem !important;
-}
-
-.module th a,
-.module td a {
-    color: var(--admin-text) !important;
-    -webkit-text-fill-color: var(--admin-text) !important;
-    font-weight: 500 !important;
-}
-
-.module th a:hover,
-.module td a:hover {
-    color: var(--admin-accent-light) !important;
-    -webkit-text-fill-color: var(--admin-accent-light) !important;
-}
-
-tr:last-child th,
-tr:last-child td {
+.card-header {
+    background: var(--eshop-grad) !important;
     border-bottom: none !important;
+    padding: 14px 20px !important;
 }
 
-/* ============================================================
-   Change List Table
-   ============================================================ */
-#changelist {
-    background: var(--admin-bg-card) !important;
-    border: 1px solid var(--admin-border-subtle) !important;
-    border-radius: var(--admin-radius) !important;
-    overflow: hidden !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+.card-header h3,
+.card-header .card-title {
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    color: white !important;
+    letter-spacing: 0.3px !important;
+    margin: 0 !important;
 }
 
+/* ---- Tables (changelist) ---- */
+.table thead th {
+    background: rgba(124, 58, 237, 0.1) !important;
+    color: #f0efff !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.6px !important;
+    border-color: rgba(124, 58, 237, 0.2) !important;
+    white-space: nowrap !important;
+}
+
+.table tbody td,
+.table tbody th {
+    color: #a09dc0 !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+    vertical-align: middle !important;
+    font-size: 0.875rem !important;
+}
+
+.table tbody tr:hover td,
+.table tbody tr:hover th {
+    background: rgba(124, 58, 237, 0.06) !important;
+}
+
+/* Inline editable cells */
+.table input[type="text"],
+.table input[type="number"],
+.table select {
+    background: #1a1a35 !important;
+    border: 1px solid rgba(124, 58, 237, 0.3) !important;
+    color: #f0efff !important;
+    border-radius: 7px !important;
+    padding: 5px 10px !important;
+    font-size: 0.875rem !important;
+    min-width: 80px !important;
+}
+
+.table input:focus,
+.table select:focus {
+    border-color: #7c3aed !important;
+    box-shadow: 0 0 0 3px var(--eshop-glow) !important;
+    outline: none !important;
+}
+
+/* ---- Filters sidebar ---- */
 #changelist-filter {
-    background: var(--admin-bg-2) !important;
-    border-left: 1px solid var(--admin-border) !important;
-    border-radius: 0 var(--admin-radius) var(--admin-radius) 0 !important;
+    background: #0d0d1a !important;
+    border-left: 1px solid var(--eshop-border) !important;
     padding: 16px !important;
 }
 
 #changelist-filter h2 {
-    background: var(--admin-accent-grad) !important;
+    background: var(--eshop-grad) !important;
     color: white !important;
-    font-size: 0.75rem !important;
+    font-size: 0.72rem !important;
     font-weight: 700 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.8px !important;
-    padding: 10px 14px !important;
-    border-radius: var(--admin-radius) !important;
-    margin-bottom: 12px !important;
+    padding: 8px 14px !important;
+    border-radius: 8px !important;
+    margin-bottom: 10px !important;
 }
 
 #changelist-filter h3 {
-    color: var(--admin-text-muted) !important;
-    font-size: 0.78rem !important;
+    color: #6b6890 !important;
+    font-size: 0.72rem !important;
     text-transform: uppercase !important;
     letter-spacing: 0.6px !important;
-    margin: 14px 0 6px !important;
 }
 
-#changelist-filter ul li a {
-    color: var(--admin-text-muted) !important;
-    -webkit-text-fill-color: var(--admin-text-muted) !important;
-    font-size: 0.84rem !important;
-    padding: 4px 0 !important;
-    display: block !important;
-}
-
-#changelist-filter ul li a:hover,
-#changelist-filter ul li.selected a {
-    color: var(--admin-accent-light) !important;
-    -webkit-text-fill-color: var(--admin-accent-light) !important;
-}
-
-#result_list {
-    width: 100% !important;
-    border-collapse: collapse !important;
-}
-
-#result_list thead th {
-    background: rgba(124, 58, 237, 0.12) !important;
-    color: var(--admin-text) !important;
-    font-size: 0.8rem !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.6px !important;
-    padding: 12px 14px !important;
-    border-bottom: 1px solid var(--admin-border) !important;
-    white-space: nowrap !important;
-}
-
-#result_list thead th a,
-#result_list thead th a:hover {
-    color: var(--admin-text) !important;
-    -webkit-text-fill-color: var(--admin-text) !important;
-}
-
-#result_list tbody tr {
-    border-bottom: 1px solid var(--admin-border-subtle) !important;
-    transition: var(--admin-transition) !important;
-}
-
-#result_list tbody tr:hover {
-    background: rgba(124, 58, 237, 0.07) !important;
-}
-
-#result_list tbody td,
-#result_list tbody th {
-    background: transparent !important;
-    color: var(--admin-text-muted) !important;
-    padding: 12px 14px !important;
-    font-size: 0.875rem !important;
-    vertical-align: middle !important;
-}
-
-#result_list tbody td a,
-#result_list tbody th a {
-    color: var(--admin-text) !important;
-    -webkit-text-fill-color: var(--admin-text) !important;
-    font-weight: 500 !important;
-}
-
-/* Editable cells in changelist */
-#result_list input[type="text"],
-#result_list input[type="number"],
-#result_list select {
-    background: var(--admin-bg-input) !important;
-    border: 1px solid var(--admin-border) !important;
-    color: var(--admin-text) !important;
-    border-radius: 7px !important;
-    padding: 6px 10px !important;
-    font-size: 0.875rem !important;
-    width: 100% !important;
-    min-width: 80px !important;
-    transition: var(--admin-transition) !important;
-}
-
-#result_list input:focus,
-#result_list select:focus {
-    outline: none !important;
-    border-color: var(--admin-accent) !important;
-    box-shadow: 0 0 0 3px var(--admin-glow) !important;
-}
-
-/* Pagination */
-.paginator {
-    background: var(--admin-bg-2) !important;
-    border-top: 1px solid var(--admin-border-subtle) !important;
-    color: var(--admin-text-muted) !important;
-    padding: 12px 16px !important;
+#changelist-filter li a {
+    color: #9d9abf !important;
     font-size: 0.85rem !important;
 }
 
-.paginator a {
-    background: var(--admin-accent) !important;
-    color: white !important;
-    -webkit-text-fill-color: white !important;
-    padding: 4px 12px !important;
-    border-radius: 7px !important;
-    margin: 0 3px !important;
-    font-weight: 600 !important;
+#changelist-filter li.selected a,
+#changelist-filter li a:hover {
+    color: #c084fc !important;
 }
 
-.paginator a:hover {
-    background: #6d28d9 !important;
-}
-
-/* Actions bar */
-.actions {
-    background: var(--admin-bg-2) !important;
-    border: 1px solid var(--admin-border-subtle) !important;
-    border-radius: var(--admin-radius) !important;
-    padding: 10px 14px !important;
-    margin-bottom: 14px !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-    flex-wrap: wrap !important;
-}
-
-/* Search bar */
-#toolbar {
-    background: var(--admin-bg-2) !important;
-    border-bottom: 1px solid var(--admin-border-subtle) !important;
-    padding: 14px 16px !important;
-}
-
+/* ---- Search bar ---- */
+#toolbar form input[type="text"],
 #searchbar {
-    background: var(--admin-bg-input) !important;
-    border: 1px solid var(--admin-border) !important;
-    color: var(--admin-text) !important;
+    background: #1a1a35 !important;
+    border: 1px solid var(--eshop-border) !important;
+    color: #f0efff !important;
     border-radius: 8px !important;
     padding: 8px 14px !important;
-    font-size: 0.9rem !important;
-    width: 280px !important;
-    transition: var(--admin-transition) !important;
 }
 
 #searchbar:focus {
+    border-color: #7c3aed !important;
     outline: none !important;
-    border-color: var(--admin-accent) !important;
-    box-shadow: 0 0 0 3px var(--admin-glow) !important;
 }
 
-/* ============================================================
-   Change Form (add/edit product page)
-   ============================================================ */
-.change-form .form-row,
-.change-form fieldset {
-    background: transparent !important;
+/* ---- Actions bar ---- */
+.actions {
+    background: #13132a !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    padding: 10px 14px !important;
 }
 
-fieldset {
-    background: var(--admin-bg-card) !important;
-    border: 1px solid var(--admin-border-subtle) !important;
-    border-radius: var(--admin-radius) !important;
-    margin-bottom: 20px !important;
+.actions select {
+    background: #1a1a35 !important;
+    border: 1px solid var(--eshop-border) !important;
+    color: #f0efff !important;
+    border-radius: 7px !important;
+}
+
+/* ---- Form fieldsets ---- */
+fieldset.module {
+    background: #13132a !important;
+    border: 1px solid rgba(255, 255, 255, 0.07) !important;
+    border-radius: 12px !important;
     overflow: hidden !important;
+    margin-bottom: 20px !important;
 }
 
-fieldset h2,
-fieldset>h2 {
-    background: var(--admin-accent-grad) !important;
+fieldset.module h2 {
+    background: var(--eshop-grad) !important;
     color: white !important;
-    font-size: 0.82rem !important;
+    font-size: 0.78rem !important;
     font-weight: 700 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.8px !important;
     padding: 12px 18px !important;
     margin: 0 !important;
     cursor: pointer !important;
-    user-select: none !important;
 }
 
-fieldset .form-row {
-    border-bottom: 1px solid var(--admin-border-subtle) !important;
-    padding: 14px 20px !important;
+.form-row {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
 }
 
-fieldset .form-row:last-child {
+.form-row:last-child {
     border-bottom: none !important;
 }
 
 label {
-    color: var(--admin-text) !important;
+    color: #f0efff !important;
     font-weight: 600 !important;
     font-size: 0.875rem !important;
 }
 
 .help {
-    color: var(--admin-text-muted) !important;
+    color: #6b6890 !important;
     font-size: 0.78rem !important;
-    margin-top: 4px !important;
 }
 
-/* All form inputs */
+/* Form inputs */
 input[type="text"],
 input[type="number"],
 input[type="email"],
-input[type="url"],
 input[type="password"],
-input[type="tel"],
-input[type="date"],
-input[type="datetime-local"],
+input[type="url"],
 textarea,
-select {
-    background: var(--admin-bg-input) !important;
-    border: 1px solid var(--admin-border) !important;
-    color: var(--admin-text) !important;
+select:not(.table select) {
+    background: #1a1a35 !important;
+    border: 1px solid var(--eshop-border) !important;
+    color: #f0efff !important;
     border-radius: 8px !important;
     padding: 9px 14px !important;
     font-size: 0.9rem !important;
     font-family: 'Inter', sans-serif !important;
-    width: 100% !important;
-    max-width: 600px !important;
-    transition: var(--admin-transition) !important;
+    transition: all 0.2s ease !important;
 }
 
 input:focus,
 textarea:focus,
 select:focus {
+    border-color: #7c3aed !important;
+    box-shadow: 0 0 0 3px var(--eshop-glow) !important;
     outline: none !important;
-    border-color: var(--admin-accent) !important;
-    box-shadow: 0 0 0 3px var(--admin-glow) !important;
 }
 
 textarea {
-    min-height: 100px !important;
+    min-height: 90px !important;
     resize: vertical !important;
 }
 
-select option {
-    background: var(--admin-bg-card) !important;
-}
-
-/* File inputs */
 input[type="file"] {
     background: transparent !important;
-    border: 2px dashed var(--admin-border) !important;
+    border: 2px dashed var(--eshop-border) !important;
     border-radius: 8px !important;
-    padding: 14px !important;
-    color: var(--admin-text-muted) !important;
-    max-width: 400px !important;
+    padding: 12px !important;
+    color: #9d9abf !important;
     cursor: pointer !important;
-    transition: var(--admin-transition) !important;
 }
 
 input[type="file"]:hover {
-    border-color: var(--admin-accent) !important;
-    background: rgba(124, 58, 237, 0.05) !important;
+    border-color: #7c3aed !important;
+    background: rgba(124, 58, 237, 0.04) !important;
 }
 
-/* Checkboxes */
 input[type="checkbox"] {
-    width: 18px !important;
-    height: 18px !important;
-    accent-color: var(--admin-accent) !important;
-    cursor: pointer !important;
+    width: 17px !important;
+    height: 17px !important;
+    accent-color: #7c3aed !important;
 }
 
-/* ============================================================
-   Buttons
-   ============================================================ */
-.button,
-input[type="submit"],
-input[type="button"],
-.submit-row input,
-button[type="submit"] {
-    background: var(--admin-accent-grad) !important;
-    color: white !important;
+/* ---- Buttons ---- */
+.btn-primary,
+input[type="submit"].default,
+.submit-row input[type="submit"] {
+    background: var(--eshop-grad) !important;
     border: none !important;
-    border-radius: 8px !important;
-    padding: 10px 22px !important;
     font-weight: 700 !important;
-    font-size: 0.875rem !important;
-    font-family: 'Inter', sans-serif !important;
-    cursor: pointer !important;
-    transition: var(--admin-transition) !important;
-    box-shadow: 0 4px 12px var(--admin-glow) !important;
-    display: inline-block !important;
-}
-
-.button:hover,
-input[type="submit"]:hover,
-input[type="button"]:hover,
-.submit-row input:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px var(--admin-glow) !important;
-    color: white !important;
-}
-
-/* Delete / danger button */
-.deletelink,
-.button.default[name="_delete"],
-input[name="_delete"] {
-    background: rgba(239, 68, 68, 0.15) !important;
-    color: #f87171 !important;
-    border: 1px solid rgba(239, 68, 68, 0.3) !important;
-    box-shadow: none !important;
-}
-
-.deletelink:hover,
-input[name="_delete"]:hover {
-    background: var(--admin-danger) !important;
-    color: white !important;
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4) !important;
-}
-
-/* Submit row */
-.submit-row {
-    background: var(--admin-bg-2) !important;
-    border: 1px solid var(--admin-border-subtle) !important;
-    border-radius: var(--admin-radius) !important;
-    padding: 16px 20px !important;
-    margin-top: 20px !important;
-    display: flex !important;
-    gap: 10px !important;
-    align-items: center !important;
-    flex-wrap: wrap !important;
-}
-
-.submit-row a.closelink,
-.submit-row a.deletelink {
-    padding: 10px 18px !important;
+    box-shadow: 0 4px 14px var(--eshop-glow) !important;
     border-radius: 8px !important;
-    font-weight: 600 !important;
-    font-size: 0.875rem !important;
+    transition: all 0.2s ease !important;
 }
 
-.submit-row a.deletelink {
+.btn-primary:hover,
+input[type="submit"].default:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px var(--eshop-glow) !important;
+}
+
+.btn-danger,
+a.deletelink {
     background: rgba(239, 68, 68, 0.12) !important;
     color: #f87171 !important;
-    -webkit-text-fill-color: #f87171 !important;
     border: 1px solid rgba(239, 68, 68, 0.3) !important;
-}
-
-.submit-row a.deletelink:hover {
-    background: var(--admin-danger) !important;
-    color: white !important;
-    -webkit-text-fill-color: white !important;
-}
-
-/* ============================================================
-   Messages / Alerts
-   ============================================================ */
-ul.messagelist {
-    list-style: none !important;
-    padding: 0 !important;
-    margin: 0 0 16px !important;
-}
-
-ul.messagelist li {
-    padding: 12px 18px !important;
-    border-radius: var(--admin-radius) !important;
     font-weight: 600 !important;
-    font-size: 0.875rem !important;
-    margin-bottom: 8px !important;
+    border-radius: 8px !important;
 }
 
-ul.messagelist li.success {
-    background: rgba(16, 185, 129, 0.12) !important;
+.btn-danger:hover,
+a.deletelink:hover {
+    background: #ef4444 !important;
+    color: white !important;
+    border-color: #ef4444 !important;
+}
+
+/* ---- Submit row ---- */
+.submit-row {
+    background: #13132a !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: 10px !important;
+    padding: 16px 20px !important;
+    gap: 10px !important;
+}
+
+/* ---- Messages ---- */
+.alert-success {
+    background: rgba(16, 185, 129, 0.1) !important;
+    border-color: rgba(16, 185, 129, 0.3) !important;
     color: #34d399 !important;
-    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    border-radius: 8px !important;
 }
 
-ul.messagelist li.warning {
-    background: rgba(245, 158, 11, 0.12) !important;
+.alert-warning {
+    background: rgba(245, 158, 11, 0.1) !important;
+    border-color: rgba(245, 158, 11, 0.3) !important;
     color: #fbbf24 !important;
-    border: 1px solid rgba(245, 158, 11, 0.3) !important;
+    border-radius: 8px !important;
 }
 
-ul.messagelist li.error {
-    background: rgba(239, 68, 68, 0.12) !important;
-    color: #f87171 !important;
-    border: 1px solid rgba(239, 68, 68, 0.3) !important;
-}
-
-/* ============================================================
-   Error list in forms
-   ============================================================ */
-.errorlist {
+.alert-danger {
     background: rgba(239, 68, 68, 0.1) !important;
-    border: 1px solid rgba(239, 68, 68, 0.3) !important;
-    border-radius: 7px !important;
+    border-color: rgba(239, 68, 68, 0.3) !important;
     color: #f87171 !important;
-    padding: 8px 14px !important;
-    margin-top: 6px !important;
-    font-size: 0.83rem !important;
-    list-style: none !important;
+    border-radius: 8px !important;
 }
 
-/* ============================================================
-   Login Page
-   ============================================================ */
-body.login {
-    background: var(--admin-bg) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    min-height: 100vh !important;
-}
-
-body.login #header {
-    display: none !important;
-}
-
-#login-form {
-    background: var(--admin-bg-card) !important;
-    border: 1px solid var(--admin-border) !important;
-    border-radius: 18px !important;
-    padding: 40px !important;
-    width: 100% !important;
-    max-width: 400px !important;
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5) !important;
-}
-
-body.login h1,
-body.login #content h1 {
-    text-align: center !important;
-    font-size: 2rem !important;
-    margin-bottom: 6px !important;
-}
-
-body.login .form-row {
-    background: transparent !important;
-    border: none !important;
-    margin-bottom: 16px !important;
-}
-
-body.login .submit-row {
-    background: transparent !important;
-    border: none !important;
-    padding: 0 !important;
-    margin-top: 8px !important;
-}
-
-body.login input[type="submit"] {
-    width: 100% !important;
-    padding: 13px !important;
-    font-size: 1rem !important;
-}
-
-/* ============================================================
-   Popup / Related Widget
-   ============================================================ */
-.related-widget-wrapper-link,
-.related-lookup,
-.add-another {
-    background: rgba(124, 58, 237, 0.12) !important;
-    border: 1px solid var(--admin-border) !important;
-    border-radius: 7px !important;
-    padding: 6px 10px !important;
-    color: var(--admin-accent-light) !important;
-    -webkit-text-fill-color: var(--admin-accent-light) !important;
-    font-size: 0.8rem !important;
-    font-weight: 600 !important;
-    margin-left: 6px !important;
-    display: inline-block !important;
-    transition: var(--admin-transition) !important;
-}
-
-.related-widget-wrapper-link:hover,
-.related-lookup:hover,
-.add-another:hover {
-    background: var(--admin-accent) !important;
-    color: white !important;
-    -webkit-text-fill-color: white !important;
-}
-
-/* ============================================================
-   Collapse / expand fieldset toggle
-   ============================================================ */
-fieldset.collapsed h2::after {
-    content: ' [+]' !important;
-    color: rgba(255, 255, 255, 0.6) !important;
-    font-weight: 400 !important;
-}
-
-fieldset h2::after {
-    content: ' [-]' !important;
-    color: rgba(255, 255, 255, 0.6) !important;
-    font-weight: 400 !important;
-}
-
-/* ============================================================
-   Footer
-   ============================================================ */
-#footer {
-    background: var(--admin-bg-2) !important;
-    border-top: 1px solid var(--admin-border-subtle) !important;
-    color: var(--admin-text-muted) !important;
-    text-align: center !important;
-    padding: 16px !important;
+/* ---- Footer ---- */
+.main-footer {
+    background: #0d0d1a !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+    color: #6b6890 !important;
     font-size: 0.8rem !important;
 }
 
-/* ============================================================
-   Responsive
-   ============================================================ */
+/* ---- Responsive ---- */
 @media (max-width: 767px) {
-    #header {
-        padding: 0 14px !important;
-        height: auto !important;
-        flex-wrap: wrap !important;
-        padding: 10px 14px !important;
-        gap: 8px !important;
-    }
-
-    #user-tools {
-        font-size: 0.78rem !important;
-    }
-
-    #content,
-    #content-main {
-        padding: 14px !important;
-    }
-
-    #searchbar {
-        width: 100% !important;
-        max-width: none !important;
-    }
-
-    .actions {
-        flex-direction: column !important;
-        align-items: stretch !important;
+    .content-header h1 {
+        font-size: 1.2rem !important;
     }
 
     .submit-row {
@@ -809,37 +433,17 @@ fieldset h2::after {
     }
 
     .submit-row input,
-    .submit-row .button {
+    .submit-row .btn,
+    .submit-row a {
         width: 100% !important;
         text-align: center !important;
-    }
-
-    fieldset h2 {
-        font-size: 0.75rem !important;
     }
 
     input[type="text"],
     input[type="number"],
     textarea,
     select {
+        width: 100% !important;
         max-width: 100% !important;
-    }
-
-    #result_list thead {
-        display: none !important;
-    }
-
-    #result_list tbody tr {
-        display: block !important;
-        border: 1px solid var(--admin-border) !important;
-        border-radius: var(--admin-radius) !important;
-        margin-bottom: 10px !important;
-        padding: 10px !important;
-    }
-
-    #result_list tbody td {
-        display: flex !important;
-        justify-content: space-between !important;
-        border-bottom: 1px solid var(--admin-border-subtle) !important;
     }
 }
