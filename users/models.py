@@ -18,3 +18,19 @@ class CustomerLoginActivity(models.Model):
 
     def __str__(self):
         return f"{self.user.username} @ {self.logged_in_at}"
+
+
+class AdminActivity(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="admin_activities")
+    action = models.CharField(max_length=64)
+    object_repr = models.CharField(max_length=255)
+    change_message = models.TextField(blank=True)
+    app_label = models.CharField(max_length=64, blank=True)
+    model = models.CharField(max_length=64, blank=True)
+    action_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-action_time"]
+
+    def __str__(self):
+        return f"{self.user.username}: {self.action} {self.object_repr}"

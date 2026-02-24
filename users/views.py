@@ -8,7 +8,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import RegisterSerializer
 from django.contrib.auth import get_user_model
-from .models import CustomerLoginActivity
+from .models import CustomerLoginActivity, AdminActivity
 
 # Create your views here.
 
@@ -66,3 +66,46 @@ class CurrentUserView(APIView):
                 "is_admin": getattr(user, "is_admin", False),
             }
         )
+
+
+class AdminRecentActionsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def _is_admin(user):
+        return bool(user and (user.is_staff or getattr(user, "is_admin", False)))
+
+    def get(self, request):
+        if not self._is_admin(request.user):
+            return Response({"detail": "Admin access required."}, status=403)
+
+        actions = AdminActivity.objects.filter(user_id=request.user.id).order_by("-action_time")[:20]
+        payload = []
+        for action in actions:
+            payload.append(
+                {
+                    "id": action.id,
+                    "action_time": action.action_time,
+                    "object_repr": action.object_repr,
+                    "change_message": action.change_message or "No details",
+                    "action_flag": action.action,
+                    "app_label": action.app_label,
+                    "model": action.model,
+                }
+            )
+        return Response(payload)
+
+
+class AdminClearRecentActionsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def _is_admin(user):
+        return bool(user and (user.is_staff or getattr(user, "is_admin", False)))
+
+    def post(self, request):
+        if not self._is_admin(request.user):
+            return Response({"detail": "Admin access required."}, status=403)
+
+        deleted_count, _ = AdminActivity.objects.filter(user_id=request.user.id).delete()
+        return Response({"cleared": deleted_count})

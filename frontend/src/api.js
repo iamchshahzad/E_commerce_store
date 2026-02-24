@@ -69,6 +69,23 @@ export function getCurrentUser(token) {
   });
 }
 
+export function getAdminRecentActions(token) {
+  return request("/api/users/admin-actions/", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export function clearAdminRecentActions(token) {
+  return request("/api/users/admin-actions/clear/", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
 export function createCategory(name, token) {
   return request("/api/categories/", {
     method: "POST",

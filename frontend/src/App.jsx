@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, Route, Routes, useNavigate, useParams } from "react-router-dom";
 import {
   createProduct,
+  clearAdminRecentActions,
+  getAdminRecentActions,
   getCurrentUser,
   getCategories,
   getProductById,
@@ -473,6 +475,8 @@ function AdminToolsPage({ token, isAdmin }) {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [savingProductId, setSavingProductId] = useState(null);
+  const [recentActions, setRecentActions] = useState([]);
+  const [clearingActions, setClearingActions] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -499,6 +503,8 @@ function AdminToolsPage({ token, isAdmin }) {
             ? prev
             : { ...prev, category: String(categoriesData[0].id) }
         );
+        const actionsData = await getAdminRecentActions(token);
+        setRecentActions(actionsData);
       } catch (err) {
         setCategories([]);
         setProducts([]);
@@ -590,6 +596,22 @@ function AdminToolsPage({ token, isAdmin }) {
       setError(`Could not update stock for product #${productId}.`);
     } finally {
       setSavingProductId(null);
+    }
+  }
+
+  async function handleClearActions() {
+    if (!token || !isAdmin) return;
+    setClearingActions(true);
+    setMessage("");
+    setError("");
+    try {
+      const result = await clearAdminRecentActions(token);
+      setRecentActions([]);
+      setMessage(`Cleared ${result.cleared} recent action(s).`);
+    } catch (err) {
+      setError(err.message || "Could not clear actions.");
+    } finally {
+      setClearingActions(false);
     }
   }
 
@@ -688,6 +710,36 @@ function AdminToolsPage({ token, isAdmin }) {
             </article>
           ))}
         </div>
+      </section>
+
+      <section className="admin-products">
+        <div className="admin-actions-head">
+          <h2>Recent Actions</h2>
+          <button
+            className="btn secondary"
+            type="button"
+            onClick={handleClearActions}
+            disabled={!isAdmin || clearingActions}
+          >
+            {clearingActions ? "Clearing..." : "Clear Activity"}
+          </button>
+        </div>
+        {recentActions.length === 0 ? (
+          <p className="state">No recent actions found.</p>
+        ) : (
+          <div className="manage-grid">
+            {recentActions.map((action) => (
+              <article className="panel" key={action.id}>
+                <h3>{action.object_repr}</h3>
+                <p className="muted">
+                  {action.app_label}.{action.model}
+                </p>
+                <p>{action.change_message}</p>
+                <p className="muted">{new Date(action.action_time).toLocaleString()}</p>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
     </section>
   );

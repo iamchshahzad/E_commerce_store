@@ -1,4 +1,5 @@
-from django.shortcuts import get_object_or_404, redirect, render
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from products.models import Product
 
@@ -20,11 +21,21 @@ def cart_detail(request):
             }
         )
 
-    bought = request.GET.get("bought") == "1"
-    return render(
-        request,
-        "cart/cart_detail.html",
-        {"items": items, "total": total, "bought": bought},
+    # Template-based cart page is deprecated; React handles frontend UI.
+    return JsonResponse(
+        {
+            "items": [
+                {
+                    "product_id": row["product"].id,
+                    "name": row["product"].name,
+                    "quantity": row["quantity"],
+                    "subtotal": str(row["subtotal"]),
+                }
+                for row in items
+            ],
+            "total": str(total),
+            "bought": request.GET.get("bought") == "1",
+        }
     )
 
 

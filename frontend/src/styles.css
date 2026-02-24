@@ -350,6 +350,14 @@ h1 {
   margin: 0 0 0.5rem;
 }
 
+.admin-actions-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
 .admin-thumb {
   width: 100%;
   height: 160px;

@@ -259,3 +259,15 @@ Behavior:
   - login page is now login-only
   - added single `Sign Up` button on login page that routes to customer signup page
   - moved customer account creation form to `/customer-signup`
+- Latest prompt update (template cleanup):
+  - removed frontend template usage from active app flow
+  - kept minimal Django `TEMPLATES` config only for Django admin compatibility
+  - converted legacy cart template response to JSON to avoid template dependency
+- Latest prompt update (admin recent actions):
+  - added admin-only API endpoints for recent actions list and clear actions
+  - added Recent Actions section in admin dashboard with optional `Clear Activity` control
+  - actions are scoped to current admin user log entries
+- Latest prompt update (API action activity logging):
+  - added `AdminActivity` model to store API-driven admin operations
+  - product/category create, update, delete and stock updates are now logged as admin recent activity
+  - recent actions endpoint now reads from `AdminActivity` for accurate dashboard actions history
