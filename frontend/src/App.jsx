@@ -7,6 +7,8 @@ import {
   getProductById,
   getProducts,
   login,
+  loginCustomer,
+  registerCustomer,
   updateProduct,
 } from "./api";
 import { addItem, clearCart, loadCart, removeItem, saveCart } from "./cart";
@@ -293,7 +295,10 @@ function LoginPage({ onLoginSuccess, onLogout, isLoggedIn, isAdmin }) {
     setMessage("");
     setError("");
     try {
-      const result = await login(username, password);
+      const result =
+        role === "admin"
+          ? await login(username, password)
+          : await loginCustomer(username, password);
       const user = await getCurrentUser(result.access);
       const userIsAdmin = Boolean(user.is_admin || user.is_staff);
 
@@ -312,8 +317,8 @@ function LoginPage({ onLoginSuccess, onLogout, isLoggedIn, isAdmin }) {
         setMessage("Customer login successful.");
         navigate("/products");
       }
-    } catch {
-      setError("Login failed. Check username/password.");
+    } catch (err) {
+      setError(err.message || "Login failed. Check username/password.");
     }
   }
 
@@ -363,6 +368,13 @@ function LoginPage({ onLoginSuccess, onLogout, isLoggedIn, isAdmin }) {
             <button className="btn" type="submit">
               Login
             </button>
+            <button
+              className="btn secondary"
+              type="button"
+              onClick={() => navigate("/customer-signup")}
+            >
+              Sign Up
+            </button>
             <button className="btn secondary" type="button" onClick={onLogout}>
               Logout
             </button>
@@ -371,6 +383,76 @@ function LoginPage({ onLoginSuccess, onLogout, isLoggedIn, isAdmin }) {
             Status:{" "}
             {isLoggedIn ? (isAdmin ? "Logged in as admin" : "Logged in as customer") : "Not logged in"}
           </p>
+        </form>
+      </div>
+    </section>
+  );
+}
+
+function CustomerSignupPage() {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+
+  async function handleSignup(event) {
+    event.preventDefault();
+    setMessage("");
+    setError("");
+    try {
+      await registerCustomer({ username, email, password });
+      setMessage("Account created successfully. You can now login.");
+      setUsername("");
+      setEmail("");
+      setPassword("");
+    } catch (err) {
+      setError(err.message || "Could not create account. Try a different username/email.");
+    }
+  }
+
+  return (
+    <section>
+      <h1>Customer Sign Up</h1>
+      {message ? <p className="state">{message}</p> : null}
+      {error ? <p className="state error">{error}</p> : null}
+      <div className="manage-grid single">
+        <form className="panel" onSubmit={handleSignup}>
+          <h2>Create Account</h2>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <div className="actions">
+            <button className="btn" type="submit">
+              Create Account
+            </button>
+            <button
+              className="btn secondary"
+              type="button"
+              onClick={() => navigate("/login")}
+            >
+              Back to Login
+            </button>
+          </div>
         </form>
       </div>
     </section>
@@ -718,6 +800,7 @@ export default function App() {
             />
           }
         />
+        <Route path="/customer-signup" element={<CustomerSignupPage />} />
         <Route
           path="/admin-tools"
           element={

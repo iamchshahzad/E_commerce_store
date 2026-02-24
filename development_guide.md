@@ -97,6 +97,8 @@ Responsive behavior:
 - Cart is client-side (`localStorage`) until backend cart APIs are introduced.
 - Store management actions in React:
   - `POST /api/users/login/` for JWT access token
+  - `POST /api/users/customer-login/` for customer-only JWT access token
+  - `POST /api/users/register/` for customer account creation
   - `POST /api/categories/` for category creation (auth required)
   - `POST /api/products/` for product creation (auth required)
 - Keep components focused and avoid embedding API calls directly in deeply nested UI elements.
@@ -106,6 +108,7 @@ Responsive behavior:
   - `/product/:id` Product detail
   - `/cart` Cart
   - `/login` unified login page (choose Admin Login or Customer Login)
+  - `/customer-signup` customer account creation page
   - `/admin-tools` Admin-only management page for category/product creation
 - Navbar behavior:
   - Guest/customer navbar shows `Home`, `Products`, `Cart`, `Login`
@@ -248,3 +251,11 @@ Behavior:
   - simplified admin dashboard to two basic areas only: `Product` and `Stock`
   - removed extra analytics/overview widgets from admin tools UI
   - kept stock update workflow as single-field stock save per product
+- Latest prompt update (customer auth + login audit):
+  - added customer signup option on login page using `/api/users/register/`
+  - added dedicated customer JWT endpoint `/api/users/customer-login/`
+  - added DB model `CustomerLoginActivity` to store customer login audit entries
+- Latest prompt update (login/signup page split):
+  - login page is now login-only
+  - added single `Sign Up` button on login page that routes to customer signup page
+  - moved customer account creation form to `/customer-signup`
