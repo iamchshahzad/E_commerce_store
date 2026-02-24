@@ -6,6 +6,8 @@ from pathlib import Path
 from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+FRONTEND_DIST_DIR = BASE_DIR / 'frontend' / 'dist'
+REACT_DEV_SERVER_URL = 'http://localhost:5173'
 
 # -------------------------------------------------------
 # Security
@@ -169,7 +171,7 @@ WSGI_APPLICATION = 'e_commerce.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ecommerce_db',
+        'NAME': 'e_commerce',
         'USER': 'postgres',
         'PASSWORD': 'qwerty',
         'HOST': 'localhost',
@@ -218,6 +220,8 @@ USE_TZ        = True
 # Static & Media
 # -------------------------------------------------------
 STATIC_URL       = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 MEDIA_URL        = '/media/'
 MEDIA_ROOT       = BASE_DIR / 'media'

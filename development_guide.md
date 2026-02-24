@@ -15,7 +15,15 @@
 - `orders/`: Purchase/order handling.
 - `users/`: User/auth models and admin.
 
+### Frontend (React)
+- `frontend/`: Vite + React storefront app.
+- `frontend/src/App.jsx`: Main routes and page shells.
+- `frontend/src/api.js`: Calls Django API endpoints.
+- `frontend/src/cart.js`: LocalStorage cart state helpers.
+- `frontend/src/styles.css`: React storefront styles.
+
 ### Static and Templates
+- Django templates are now legacy/fallback pages.
 - `static/css/style.css`: Storefront theme and components.
 - `static/css/admin_custom.css`: Admin theme overrides and dashboard layout.
 - `templates/base.html`: Shared storefront shell (navbar, theme toggle, footer).
@@ -71,6 +79,38 @@ Responsive behavior:
 - Desktop: three-part row.
 - Tablet: actions move below content.
 - Mobile: stacked rows.
+
+---
+
+## React Storefront Rules
+
+- React app is the default storefront runtime.
+- Data source for products/categories is Django REST API:
+  - `GET /api/products/`
+  - `GET /api/products/<id>/`
+  - `GET /api/categories/`
+- React dev server proxies `/api` and `/media` to Django (`127.0.0.1:8000`).
+- Production/local attached mode: build React and let Django serve `frontend/dist/index.html`.
+- Backend route split:
+  - API endpoints are under `/api/`
+  - Non-API frontend routes are resolved by Django catch-all to React entrypoint
+- Cart is client-side (`localStorage`) until backend cart APIs are introduced.
+- Store management actions in React:
+  - `POST /api/users/login/` for JWT access token
+  - `POST /api/categories/` for category creation (auth required)
+  - `POST /api/products/` for product creation (auth required)
+- Keep components focused and avoid embedding API calls directly in deeply nested UI elements.
+- Frontend route map:
+  - `/` Home page
+  - `/products` Product listing
+  - `/product/:id` Product detail
+  - `/cart` Cart
+  - `/login` unified login page (choose Admin Login or Customer Login)
+  - `/admin-tools` Admin-only management page for category/product creation
+- Navbar behavior:
+  - Guest/customer navbar shows `Home`, `Products`, `Cart`, `Login`
+  - Admin navbar uses a different visual theme and shows `Dashboard`, `Catalog`, `Admin Tools`, `Logout`
+  - Navbar is responsive with a mobile menu toggle
 
 ---
 
@@ -130,10 +170,12 @@ Behavior:
 
 ## Workflow
 
-1. Build template structure first.
-2. Style with theme variables only.
-3. Verify responsive behavior at `1100px`, `900px`, and `640px`.
-4. **Update this `development_guide.md` after every prompt that changes UI/behavior.**
+1. Build React page/component structure first.
+2. Keep API access in `frontend/src/api.js`.
+3. Keep cart state operations in `frontend/src/cart.js`.
+4. Style in `frontend/src/styles.css`.
+5. Verify responsive behavior at `1100px`, `900px`, and `640px`.
+6. **Update this `development_guide.md` after every prompt that changes UI/behavior.**
 
 ## Commit Protocol
 
@@ -159,3 +201,50 @@ Behavior:
 - Latest prompt update (product table fit):
   - product image sizing and row height are fixed for consistent visual rhythm
   - results table uses separate borders with defined spacing to mirror the target screenshot
+- Latest prompt update (React migration):
+  - added `frontend/` Vite + React storefront with routes for products, product detail, and cart
+  - wired React data layer to existing Django API (`/api/products`, `/api/categories`)
+  - moved storefront cart behavior to LocalStorage via `frontend/src/cart.js`
+- Latest prompt update (React attached to backend):
+  - removed Django storefront template routes from `products/urls.py`
+  - moved products/categories endpoints to backend API namespace (`/api/...`)
+  - added Django catch-all route to serve React build for non-API paths
+- Latest prompt update (React manage actions):
+  - added `/manage` page with login form and token persistence in LocalStorage
+  - added Add Category and Add Product forms in React (optional product image upload)
+  - wired creation flow to protected DRF endpoints using Bearer token
+- Latest prompt update (Home + Admin page naming):
+  - added explicit Home page at `/`
+  - moved product listing to `/products`
+  - added explicit Admin page route `/admin-page` (kept `/manage` alias)
+- Latest prompt update (admin-only management flow):
+  - removed add category/product forms from `/admin-page` and kept login-only there
+  - created separate `/admin-tools` page with add category and add product forms
+  - added role check (`is_admin`/`is_staff`) after login and restricted write APIs to admins only
+- Latest prompt update (login UX refinement):
+  - navbar now shows only `Login` (no direct Admin/Admin Tools links)
+  - `/login` now displays role choice: `Admin Login` and `Customer Login`
+  - admin path requires admin account then redirects to `/admin-tools`; customer path redirects to `/products`
+- Latest prompt update (admin navbar theme + responsive):
+  - added a separate admin-themed navbar after admin login
+  - added responsive mobile navigation toggle behavior
+  - integrated quick logout action in admin navbar
+- Latest prompt update (admin product dashboard editing):
+  - admin tools now load all existing products in editable cards
+  - admin can update product name, description, stock, price, category, and image
+  - each product has per-item save action powered by `PATCH /api/products/<id>/`
+- Latest prompt update (dashboard shift):
+  - admin management tools are now shifted to admin dashboard route (`/`) after admin login
+  - removed admin tools entry from navbar; admin navbar now focuses on dashboard and catalog
+- Latest prompt update (full admin panel redesign):
+  - rebuilt admin dashboard layout with left sidebar + overview topbar + metric cards + analytics panel
+  - applied a mint/teal themed visual system inspired by provided reference screenshot
+  - kept full admin capabilities for add/edit product/category inside redesigned sections
+- Latest prompt update (products vs inventory separation):
+  - Products section is now dedicated to adding category and adding product only
+  - Inventory section is now dedicated to stock management only
+  - stock updates are saved via product PATCH with stock field only
+- Latest prompt update (basic admin panel):
+  - simplified admin dashboard to two basic areas only: `Product` and `Stock`
+  - removed extra analytics/overview widgets from admin tools UI
+  - kept stock update workflow as single-field stock save per product

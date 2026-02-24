@@ -17,17 +17,25 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import include, path
+from django.views.static import serve
+from django.urls import include, path, re_path
 from users.admin import clear_recent_actions
+from .views import react_app
 
 
 urlpatterns = [
     path('admin/clear-recent-actions/', clear_recent_actions, name='admin_clear_recent_actions'),
     path('admin/', admin.site.urls),
-    path('cart/', include('cart.urls')),
-    path('', include('products.urls')),
+    path('api/', include('products.urls')),
+    path('api/users/', include('users.urls')),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += [
+        re_path(r'^assets/(?P<path>.*)$', serve, {'document_root': settings.FRONTEND_DIST_DIR / 'assets'}),
+    ]
 
+urlpatterns += [
+    re_path(r'^(?!api/|admin/|media/|assets/).*$', react_app, name='react_app'),
+]
