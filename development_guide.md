@@ -271,3 +271,6 @@ Behavior:
   - added `AdminActivity` model to store API-driven admin operations
   - product/category create, update, delete and stock updates are now logged as admin recent activity
   - recent actions endpoint now reads from `AdminActivity` for accurate dashboard actions history
+- Latest prompt update (category option restore):
+  - restored Add Category option in basic admin panel
+  - admin panel now includes both Add Category and Add Product plus Stock management

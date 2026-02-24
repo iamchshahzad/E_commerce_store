@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Route, Routes, useNavigate, useParams } from "react-router-dom";
 import {
+  createCategory,
   createProduct,
   clearAdminRecentActions,
   getAdminRecentActions,
@@ -464,6 +465,7 @@ function CustomerSignupPage() {
 function AdminToolsPage({ token, isAdmin }) {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+  const [categoryName, setCategoryName] = useState("");
   const [productForm, setProductForm] = useState({
     name: "",
     description: "",
@@ -477,6 +479,16 @@ function AdminToolsPage({ token, isAdmin }) {
   const [savingProductId, setSavingProductId] = useState(null);
   const [recentActions, setRecentActions] = useState([]);
   const [clearingActions, setClearingActions] = useState(false);
+
+  async function loadRecentActions() {
+    if (!token || !isAdmin) return;
+    try {
+      const actionsData = await getAdminRecentActions(token);
+      setRecentActions(actionsData);
+    } catch {
+      setRecentActions([]);
+    }
+  }
 
   useEffect(() => {
     async function loadData() {
@@ -503,8 +515,7 @@ function AdminToolsPage({ token, isAdmin }) {
             ? prev
             : { ...prev, category: String(categoriesData[0].id) }
         );
-        const actionsData = await getAdminRecentActions(token);
-        setRecentActions(actionsData);
+        await loadRecentActions();
       } catch (err) {
         setCategories([]);
         setProducts([]);
@@ -548,8 +559,33 @@ function AdminToolsPage({ token, isAdmin }) {
           newImage: null,
         },
       ]);
+      await loadRecentActions();
     } catch {
       setError("Could not add product.");
+    }
+  }
+
+  async function handleAddCategory(event) {
+    event.preventDefault();
+    setMessage("");
+    setError("");
+    if (!token || !isAdmin) {
+      setError("Only admin users can modify store data.");
+      return;
+    }
+    try {
+      const created = await createCategory(categoryName, token);
+      setCategories((prev) => [...prev, created]);
+      setCategoryName("");
+      setMessage("Category added.");
+      setProductForm((prev) =>
+        prev.category
+          ? prev
+          : { ...prev, category: String(created.id) }
+      );
+      await loadRecentActions();
+    } catch (err) {
+      setError(err.message || "Could not add category.");
     }
   }
 
@@ -592,6 +628,7 @@ function AdminToolsPage({ token, isAdmin }) {
         )
       );
       setMessage(`Stock updated for product #${productId}.`);
+      await loadRecentActions();
     } catch {
       setError(`Could not update stock for product #${productId}.`);
     } finally {
@@ -606,7 +643,7 @@ function AdminToolsPage({ token, isAdmin }) {
     setError("");
     try {
       const result = await clearAdminRecentActions(token);
-      setRecentActions([]);
+      await loadRecentActions();
       setMessage(`Cleared ${result.cleared} recent action(s).`);
     } catch (err) {
       setError(err.message || "Could not clear actions.");
@@ -623,6 +660,20 @@ function AdminToolsPage({ token, isAdmin }) {
       {error ? <p className="state error">{error}</p> : null}
 
       <div className="manage-grid">
+        <form className="panel" onSubmit={handleAddCategory}>
+          <h2>Category</h2>
+          <input
+            type="text"
+            placeholder="Category name"
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)}
+            required
+          />
+          <button className="btn" type="submit" disabled={!isAdmin}>
+            Add Category
+          </button>
+        </form>
+
         <form className="panel" onSubmit={handleAddProduct}>
           <h2>Product</h2>
           <input

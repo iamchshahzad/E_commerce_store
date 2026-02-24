@@ -79,7 +79,13 @@ class AdminRecentActionsView(APIView):
         if not self._is_admin(request.user):
             return Response({"detail": "Admin access required."}, status=403)
 
-        actions = AdminActivity.objects.filter(user_id=request.user.id).order_by("-action_time")[:20]
+        try:
+            actions = AdminActivity.objects.filter(user_id=request.user.id).order_by("-action_time")[:20]
+        except DatabaseError:
+            return Response(
+                {"detail": "Admin activity table unavailable. Run migrations first."},
+                status=503,
+            )
         payload = []
         for action in actions:
             payload.append(
@@ -107,5 +113,11 @@ class AdminClearRecentActionsView(APIView):
         if not self._is_admin(request.user):
             return Response({"detail": "Admin access required."}, status=403)
 
-        deleted_count, _ = AdminActivity.objects.filter(user_id=request.user.id).delete()
+        try:
+            deleted_count, _ = AdminActivity.objects.filter(user_id=request.user.id).delete()
+        except DatabaseError:
+            return Response(
+                {"detail": "Admin activity table unavailable. Run migrations first."},
+                status=503,
+            )
         return Response({"cleared": deleted_count})
