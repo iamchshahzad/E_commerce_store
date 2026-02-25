@@ -67,7 +67,7 @@ def populate():
             )
 
             # Handle Image
-            image_src_path = os.path.join(base_dir, prod_data["image_src"])
+            image_src_path = os.path.join(media_products_dir, prod_data["image_src"])
             if os.path.exists(image_src_path):
                 with open(image_src_path, 'rb') as f:
                     product.image.save(prod_data["image_src"], File(f), save=False)
