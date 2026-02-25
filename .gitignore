@@ -8,9 +8,10 @@ __pycache__/
 # Django
 *.log
 local_settings.py
-db.sqlite3
-db.sqlite3-journal
-media/
+backend/db.sqlite3
+backend/db.sqlite3-journal
+backend/media/
+backend/static/
 
 # Virtual environments
 .env

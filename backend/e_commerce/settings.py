@@ -6,7 +6,7 @@ from pathlib import Path
 from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-FRONTEND_DIST_DIR = BASE_DIR / 'frontend' / 'dist'
+FRONTEND_DIST_DIR = BASE_DIR.parent / 'frontend' / 'dist'
 REACT_DEV_SERVER_URL = 'http://localhost:5173'
 
 # -------------------------------------------------------
